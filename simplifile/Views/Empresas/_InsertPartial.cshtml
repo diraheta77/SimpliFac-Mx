@@ -1,0 +1,23 @@
+﻿
+@model simplifile.ViewModels.Empresa.EmpresaInsertarViewModel
+<!-- Modal -->
+<div class="modal-body">
+    <form asp-action="Insert">
+        <input name="IsValid" type="hidden" value="@ViewData.ModelState.IsValid.ToString()" />
+        <div class="form-group">
+            <label asp-for="EmpId"></label>
+            <input asp-for="EmpId" class="form-control" />
+            <span asp-validation-for="EmpId" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="EmpRazonSocial"></label>
+            <input asp-for="EmpRazonSocial" class="form-control" />
+            <span asp-validation-for="EmpRazonSocial" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="EmpRFC"></label>
+            <input asp-for="EmpRFC" class="form-control" />
+            <span asp-validation-for="EmpRFC" class="text-danger"></span>
+        </div>
+    </form>
+</div>

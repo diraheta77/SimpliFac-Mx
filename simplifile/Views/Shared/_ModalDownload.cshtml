@@ -1,0 +1,42 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+
+
+    <section>
+        <!--botones para acciones de descargas masivas-->
+        @*<a target="_blank" download id="excelya" href="@Url.Action("GetExcelDocument","Nomina")" type="button" style="display:none;">Descargar Excel</a>*@
+        <a target="_blank" id="downloadxmls" href="" type="button" style="display:none;">Descargar Excel</a>
+        <a target="_blank" id="downloadpdfs" download href="" type="button" style="display:none;">Descargar Excel</a>
+        <a target="_blank" id="downloadzip" download href="" type="button" style="display:none;">Descargar Excel</a>
+        <button type="button" class="btn btn-primary" data-toggle="modal" id="btnmodal" data-target="#modalPromt" style="display:none;">
+            Launch demo modal
+        </button>
+        <!-- Modal -->
+        <div class="modal fade" id="modalPromt" tabindex="-1" role="dialog" aria-labelledby="modalPromtLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalPromtLabel">Descarga masiva</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p><strong> Selecciona Formatos a Descargar:</strong></p>
+                        <p><input type="checkbox" name="todoxml" id="todoxml" class="form-check" /> XML</p>
+                        <p><input type="checkbox" name="todopdf" id="todopdf" class="form-check" /> PDF</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="btnProcesarZip">Procesar</button>
+                        @*<button type="button" class="btn btn-warning pdfs">PDF</button>
+                        <button type="button" class="btn btn-info xmls">XML</button>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>

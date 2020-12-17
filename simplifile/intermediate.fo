@@ -1,0 +1,73 @@
+﻿<html xmlns:cfdi="http://www.sat.gob.mx/cfd/3" xmlns:tfd="http://www.sat.gob.mx/TimbreFiscalDigital" xmlns:pago10="http://www.sat.gob.mx/Pagos"><head><META http-equiv="Content-Type" content="text/html; charset=utf-8"><style>
+          @import url('https://fonts.googleapis.com/css?family=Roboto');
+        </style><title>COMPROBANTE FISCAL DIGITAL POR INTERNET (CFDI)</title><style type="text/css">
+          body {
+          text-align:justify;
+          font-size: 18px;
+          font-weight:normal;
+          background-color: #eee4e0;
+          font-family: 'Roboto', sans-serif;
+          }
+
+          h1
+          {
+          font-size:26px;
+          color:#333;
+          font-weight: bold;
+          margin-bottom: 5px;
+          text-align: center;
+          }
+
+          .cuerpo_form {
+          background-color:#fcfcfc;
+          width:95%;
+          margin:0 auto;
+          padding: 10px 10px;
+          }
+
+
+          .bold { font-weight:bold; color:#cc480e;}
+
+          table.gridtable {
+          border-width: 1px;
+          border-color: #cc480e;
+          border-collapse: collapse;
+          width:90%;
+          margin-left:auto;
+          margin-right:auto;
+          }
+          table.gridtable td {
+          border-width: 1px;
+          padding: 2px;
+          border-style: solid;
+          border-color: #cc480e;
+          vertical-align: top;
+          font-size: 12px;
+          }
+          .titulo{
+          background-color:#e4815d;
+          color:#333;
+          font-weight:bold;
+          }
+          .subtitulo{
+          background-color:#eee4e0;
+          }
+          .total{
+          background-color:#feb65a;
+          }
+        </style></head><body><div class="texto_centro"><h1>
+                CFDI Versión: 3.3<br>Factura
+					</h1></div><div class="cuerpo_form"><table align="center" class="gridtable"><tr><td style="width:50%;"><table style="width:100%;" class="datos"><tr><td colspan="2" class="titulo">DATOS DEL EMISOR</td></tr><tr><td class="bold">RFC</td><td class="dato">ICF120209CCA</td></tr><tr><td class="bold">Nombre</td><td class="dato">IDEAL CONTABLES Y FISCALES SA DE CV</td></tr><tr><td class="bold">Régimen Fiscal</td><td class="dato">601</td></tr><tr><td colspan="2"><br></td></tr><tr><td colspan="2" class="titulo">DATOS DEL RECEPTOR</td></tr><tr><td class="bold">RFC</td><td class="dato">HEMR801218T71</td></tr><tr><td class="bold">Nombre</td><td class="dato">ROBERTO ALONSO HERRERA MENDOZA</td></tr><tr><td class="bold">Uso del CFDI</td><td class="dato">P01</td></tr></table></td><td style="vertical-align:top;width:50%;"><table style="width:100%;" class="datos"><tr><td colspan="2" class="titulo">DATOS DEL COMPROBANTE FISCAL</td></tr><tr><td class="bold">UUID</td><td class="dato">DF3A2DA6-CD34-ECC7-F589-30AD180EDB70</td></tr><tr><td class="bold">Serie y Folio</td><td class="dato"></td></tr><tr><td class="bold">Fecha</td><td class="dato">2019-01-16T13:13:26</td></tr><tr><td class="bold">Tipo de Comprobante</td><td class="dato">N</td></tr><tr><td class="bold">Forma de pago</td><td class="dato">99</td></tr><tr><td class="bold">Metodo de pago</td><td class="dato">PUE</td></tr><tr><td class="bold">Moneda</td><td class="dato">MXN</td></tr><tr><td class="bold">No Certificado</td><td class="dato">00001000000408138681</td></tr></table></td></tr><tr><td colspan="2"><br><table style="width:100%;"><tr><td colspan="3" class="titulo">IMPUESTOS Y TOTALES</td></tr><tr><td class="titulo subtitulo">
+                          RETENIDOS
+                        </td><td class="titulo subtitulo">
+                          TRASLADADOS
+                        </td><td class="titulo subtitulo">
+                          TOTALES
+                        </td></tr><tr><td><table style="width:100%;"><tr><td class="bold">Total</td><td class="total">
+                                $ NaN</td></tr></table></td><td><table style="width:100%;"><tr><td class="bold">Total</td><td class="total">
+                                $ NaN</td></tr></table></td><td><table style="width:100%;"><tr><td class="bold">SubTotal</td><td class="dato">
+                                $ 26,944.15</td></tr><tr><td class="bold">Descuento</td><td class="dato">
+                                  $ 7,195.34</td></tr><tr><td class="bold">Total</td><td class="total">
+                                $ 19,748.81</td></tr></table></td></tr></table><br></td></tr><tr><td class="titulo" colspan="2">CONCEPTOS</td></tr><tr><td colspan="2"><table style="width:100%;" id="conceptos" cellpadding="0" cellspacing="0"><tr style="font-weight:bolder;"><td class="titulo subtitulo">CLAVE</td><td class="titulo subtitulo">CANTIDAD</td><td class="titulo subtitulo">UNIDAD</td><td class="titulo subtitulo">DESCRIPCION</td><td class="titulo subtitulo">VALOR UNITARIO</td><td class="titulo subtitulo">IMPORTE</td></tr><tr><td>84111505</td><td>1</td><td>ACT</td><td>Pago de nómina</td><td>
+                              $26,944.15</td><td>
+                              $26,944.15</td></tr></table></td></tr></table></div></body></html>

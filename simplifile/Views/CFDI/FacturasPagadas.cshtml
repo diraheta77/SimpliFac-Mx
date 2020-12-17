@@ -1,0 +1,429 @@
+﻿@model simplifile.ViewModels.CFDI.NuevoPagoViewModel
+@{
+    ViewData["Title"] = "Facturas Pagadas";
+    ViewData["Header"] = "<i class='fa fa-files-o'></i> Facturas Pagadas";
+}
+
+<div class="box">
+    <div class="box-header with-border">
+        <div class="box-tools pull-right" id="example_wrapper">
+            <button type="button" class="btn btn-primary" onclick="resetForm();" data-toggle='modal' data-target='#newPago'>Nuevo Pago</button>
+            <button type="button" class="btn btn-warning" data-toggle='modal' data-target='#carga'>Carga masiva</button>
+        </div>
+    </div>
+
+    <div class="box-body">
+        <form id="frm-search" class=" filter" action="#">
+            <div class="form-group">
+                <select id="filter_emisor" name="filter_emisor" class="form-control selectpicker">
+                    <option value="">Filtrar por RFC Emisor</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <select id="filter_receptor" name="filter_emisor" class="form-control selectpicker">
+                    <option value="">Filtrar por RFC Receptor</option>
+                </select>
+            </div>
+            <div class="form-group has-feedback">
+                <input type="text" class="form-control pull-right date" id="filter_fecha_pago" placeholder="Fecha de Pago" autocomplete="off" />
+                <span class="fa fa-calendar form-control-feedback"></span>
+            </div>
+        <div class="btn-container">
+            <button type="button" class="btn btn-default search">
+                <i class="fa fa-search"></i>
+            </button>
+            <button type="button" class="btn btn-default reaload-table " title="Datos de Inicio">
+                <i class="fa fa-refresh"></i>
+            </button>
+        </div>
+        <button id="reset-form" type="reset" style="display:none;"></button>
+        </form>
+        <section>
+            <table id="tb-facturaspagadas" class="table table-striped table-hover table-responsive dataTable compact stripe text-nowrap" style="width: 100%;" role="grid" aria-describedby="companies_info">
+                <thead>
+                    <tr>
+                        <th>UUID</th>
+                        <th>Folio</th>
+                        <th>Serie</th>
+                        <th>Fecha Emision</th>
+                        <th>Forma de Pago</th>
+                        <th>Metodo de Pago</th>
+                        <th>Moneda</th>
+                        <th>RFC Emisor</th>
+                        <th>Emisor</th>
+                        <th>RFC Receptor</th>
+                        <th>Receptor</th>
+                        <th>Monto Pagado</th>
+                        <th>Fecha de Pago</th>
+                        <th>Referencia de Pago</th>
+                        <th>Impuestos Retenidos</th>
+                        <th>Impuestos Trasladados</th>
+                        <th>SubTotal</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </section>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="carga" tabindex="-1" aria-labelledby="cargamodallabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLabel">Carga Masiva</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="uploadTemplate" method="post" enctype="multipart/form-data">
+                    <p>Seleccion archivo masivo:<input type="file" name="file" id="file" class="form-control-file" /></p>
+                    <button type="submit" id="submitfile" style="display:none;"></button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="newPago" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLabel">Agregar Pago</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post" asp-action="NewPago" id="js-enviar">
+                    <div class="row">
+                        <div class="form-group col-md-4 has-feedback">
+                            <label asp-for="UUID"></label>
+                            <input asp-for="UUID" type="text" class="form-control " placeholder="UUID" />
+                            @*<span class="glyphicon glyphicon-comment form-control-feedback"></span>*@
+                            <span asp-validation-for="UUID" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-4 has-feedback">
+                            <label asp-for="TipoComprobante"></label>
+                            <input asp-for="TipoComprobante" type="text" class="form-control" placeholder="Tipo Comprobante" />
+                            @*<span class="glyphicon glyphicon-comment form-control-feedback"></span>*@
+                            <span asp-validation-for="TipoComprobante" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-4 has-feedback">
+                            <label asp-for="Serie"></label>
+                            <input asp-for="Serie" type="text" class="form-control" placeholder="Serie" />
+                            @*<span class="glyphicon glyphicon-comment form-control-feedback"></span>*@
+                            <span asp-validation-for="Serie" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-4 has-feedback">
+                            <label asp-for="RFCEmisor"></label>
+                            <input asp-for="RFCEmisor" type="text" class="form-control " placeholder="RFC Emisor" />
+                            @*<span class="glyphicon glyphicon-comment form-control-feedback"></span>*@
+                            <span asp-validation-for="RFCEmisor" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-4 has-feedback">
+                            <label asp-for="NombreEmisor"></label>
+                            <input asp-for="NombreEmisor" type="text" class="form-control " placeholder="Nombre Emisor" />
+                            @*<span class="glyphicon glyphicon-comment form-control-feedback"></span>*@
+                            <span asp-validation-for="NombreEmisor" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-4 has-feedback">
+                            <label asp-for="Folio"></label>
+                            <input asp-for="Folio" type="text" class="form-control" placeholder="Folio" />
+                            @*<span class="glyphicon glyphicon-comment form-control-feedback"></span>*@
+                            <span asp-validation-for="Folio" class="text-danger"></span>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="row">
+                        <div class="form-group col-md-4 has-feedback">
+                            <label asp-for="RFCReceptor"></label>
+                            <input asp-for="RFCReceptor" type="text" class="form-control " placeholder="RFC Receptor" />
+                            @*<span class="glyphicon glyphicon-comment form-control-feedback"></span>*@
+                            <span asp-validation-for="RFCReceptor" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-4 has-feedback">
+                            <label asp-for="NombreReceptor"></label>
+                            <input asp-for="NombreReceptor" type="text" class="form-control " placeholder="Receptor" />
+                            @*<span class="glyphicon glyphicon-comment form-control-feedback"></span>*@
+                            <span asp-validation-for="NombreReceptor" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-4 has-feedback">
+                            <label asp-for="FechaComprobante"></label>
+                            <input asp-for="FechaComprobante" type="date" class="form-control" placeholder="Fecha Comprobante" />
+                            @*<span class="glyphicon glyphicon-calendar form-control-feedback"></span>*@
+                            <span asp-validation-for="FechaComprobante" class="text-danger"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="form-group col-md-4 has-feedback">
+                            <label asp-for="FormaPago"></label>
+                            <input asp-for="FormaPago" type="text" class="form-control" placeholder="Forma de Pago" />
+                            @*<span class="glyphicon glyphicon-comment form-control-feedback"></span>*@
+                            <span asp-validation-for="FormaPago" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-4 has-feedback">
+                            <label asp-for="MetodoPago"></label>
+                            <input asp-for="MetodoPago" type="text" class="form-control" placeholder="Metodo Pago" />
+                            @*<span class="glyphicon glyphicon-comment form-control-feedback"></span>*@
+                            <span asp-validation-for="MetodoPago" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-4 has-feedback">
+                            <label asp-for="Moneda"></label>
+                            <input asp-for="Moneda" type="text" class="form-control" placeholder="Moneda" />
+                            @*<span class="glyphicon glyphicon-comment form-control-feedback"></span>*@
+                            <span asp-validation-for="Moneda" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-4 has-feedback">
+                            <label asp-for="ImpuestosTrasladados"></label>
+                            <input asp-for="ImpuestosTrasladados" type="number" class="form-control" placeholder="Impuestos Trasladados" />
+                            @*<span class="glyphicon glyphicon-usd form-control-feedback"></span>*@
+                            <span asp-validation-for="ImpuestosTrasladados" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-4 has-feedback">
+                            <label asp-for="ImpuestosRetenidos"></label>
+                            <input asp-for="ImpuestosRetenidos" type="number" class="form-control" placeholder="Impuestos Retenidos" />
+                            @*<span class="glyphicon glyphicon-usd form-control-feedback"></span>*@
+                            <span asp-validation-for="ImpuestosRetenidos" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-4 has-feedback">
+                            <label asp-for="SubTotal"></label>
+                            <input asp-for="SubTotal" type="number" class="form-control" placeholder="SubTotal" />
+                            @*<span class="glyphicon glyphicon-usd form-control-feedback"></span>*@
+                            @*<span asp-validation-for="SubTotal" class="text-danger"></span>*@
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-4 has-feedback">
+                            <label asp-for="Total"></label>
+                            <input asp-for="Total" type="number" class="form-control" placeholder="Total" />
+                            @*<span class="glyphicon glyphicon-usd form-control-feedback"></span>*@
+                            <span asp-validation-for="Total" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-4 has-feedback">
+                            <label asp-for="FechaDePago"></label>
+                            <input asp-for="FechaDePago" type="date" class="form-control" placeholder="fecha de pago" />
+                            @*<span class="glyphicon glyphicon-calendar form-control-feedback"></span>*@
+                            <span asp-validation-for="FechaDePago" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-4 has-feedback">
+                            <label asp-for="MontoDePago"></label>
+                            <input asp-for="MontoDePago" type="number" class="form-control" placeholder="monto de pago" />
+                            @*<span class="glyphicon glyphicon-usd form-control-feedback"></span>*@
+                            <span asp-validation-for="MontoDePago" class="text-danger"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="form-group col-md-4 has-feedback">
+                            <label asp-for="ReferenciaDePago"></label>
+                            <input asp-for="ReferenciaDePago" type="text" class="form-control" placeholder="ref. de pago" />
+                            @*<span class="glyphicon glyphicon-comment form-control-feedback"></span>*@
+                            <span asp-validation-for="ReferenciaDePago" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <input asp-for="UUID" type="hidden" />
+                        <button type="reset" class="btn reset" style="display:none;">Reset form</button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary guardar">Guardar Cambios</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@section Styles{
+    <link rel="stylesheet" href="~/theme/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+    <partial name="_DatatableStyles" />
+}
+
+@section Scripts{
+    <partial name="_DatatableScripts" />
+
+    <script src="~/theme/bower_components/moment/min/moment.min.js"></script>
+    <script src="~/theme/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="~/theme/bower_components/bootstrap-datepicker/dist/locales/bootstrap-datepicker.es.min.js"></script>
+    <partial name="_ScriptForZip" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+        var table = null;
+
+        //se llama desde el boton de dolar para nuevo pago.
+        function resetForm() {
+            $(".reset").click();
+        }
+
+        $(function () {
+
+            $("#file").change(function () {
+                $("#submitfile").click();
+            });
+
+            $(".guardar").click(function () {
+                debugger;
+                var form = $("#js-enviar");
+                if (!form.valid()) return;
+
+                form.addClass('was-validated');
+                $("#js-enviar").submit();
+            })
+
+                    $('body').on('focus', ".date", function () {
+                        $(this).datepicker({
+                            //endDate: new Date(),
+                            language: 'es',
+                            autoclose: true,
+                            format: 'dd/mm/yyyy'
+                        })
+                    });
+
+                        table = $("#tb-facturaspagadas").DataTable({
+                        "processing": true,
+                        "serverSide": false,
+                        "ordering": true,
+                        "searching": true,
+                        "lengthChange": true,
+                        "colReorder": true,
+                        "responsive": true,
+                        scrollX: true,
+                        stateSave: true,
+                            order: [[3, 'asc']],
+                            dom: 'Bfrtip',
+                        "language": {
+                            "url": "@Url.Content("~/langs/data-table-es.json")"
+                        },
+                        //dom: 'Bfrtip',
+                        //order: [[1, 'asc']],
+                            columns: [
+                                { data: "cfdUUID" },
+                                { data: "cfdFolio" },
+                                { data: "cfdSerie" },
+                                { data: "cfdFechaEmision" },
+                                { data: "cfdFormaPago" },
+                                { data: "cfdMetodoPago" },
+                                { data: "cfdMoneda" },
+                                { data: "cfdRFCEmisor" },
+                                { data: "cfdNombreEmisor" },
+                                { data: "cfdRFCReceptor" },
+                                { data: "cfdNombreReceptor" },
+                                { data: "cfdMontoPagado" },
+                                { data: "cfdFechaPago" },
+                                { data: "cfdReferenciaPago" },
+                                { data: "cfdTotalImpuestosRetenidos" },
+                                { data: "cfdTotalImpuestosTrasladados" },
+                                { data: "cfdSubtotalCFDI" },
+                                { data: "cfdTotalCFDI" },
+                            ],
+                            columnDefs: [
+                                {
+                                    "render": function (data, type, row) {
+                                        return moment(data).format('DD-MM-YYYY');
+                                    },
+                                    "targets": [3,12]
+                                },
+                            ],
+                            buttons: [
+                                {
+                                    extend: 'colvis', text: 'Visibilidad Columnas',
+                                    columns: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17]
+                                },
+                                {
+                                    extend: 'excel', text: 'Exportar a Excel',
+                                    //exportOptions: {
+                                    //    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+                                    //}
+                                },
+                            ]
+                    })//fin datatable...
+
+            //carga inicial...
+            $.get("@Url.Content("~/")api/cfdi/pagadas").done(function (result) {
+                    console.log(result);
+                    table.clear();
+                table.rows.add(result).draw();
+                FillDropDowns(result);
+            });
+            //re-carga en su estado inicial...
+            $(".reaload-table").click(function () {
+                $("#reset-form").click();
+                $.get("@Url.Content("~/")api/cfdi/pagadas").done(function (result) {
+                    console.log(result);
+                    table.clear();
+                    table.rows.add(result).draw();
+                    FillDropDowns(result);
+            });
+            });
+
+            //carga segun busqueda
+            $(".search").click(function () {
+                var params = {
+                    emisor: $("#filter_emisor option:selected").val(),
+                    receptor: $("#filter_receptor option:selected").val(),
+                    fechai: $("#filter_fecha_pago").val(),
+                }
+
+                $.get("@Url.Content("~/")api/cfdi/pagadas", params).done(function (result) {
+                    console.log(result);
+                    table.clear();
+                    table.rows.add(result).draw();
+                    FillDropDowns(result);
+                    });
+            });
+
+            function FillDropDowns(data) {
+                $("#filter_emisor option").remove();
+                $("#filter_receptor option").remove();
+                $("#filter_emisor").append(new Option('Filtrar por RFC Emisor'));
+                $("#filter_receptor").append(new Option('Filtrar por RFC Receptor'));
+                var $emisor = $("#filter_emisor");
+                var $receptor = $("#filter_receptor");
+                var datos = new Array();
+
+                $.each(data, function () {
+                    if (!datos.includes(this.cfdRFCEmisor)) {
+                        datos.push(this.cfdRFCEmisor);
+                        $emisor.append($("<option />").val(this.cfdRFCEmisor).text(this.cfdRFCEmisor));
+                    }
+                });
+
+                datos = new Array();
+                $.each(data, function () {
+                    if (!datos.includes(this.cfdRFCReceptor)) {
+                        datos.push(this.cfdRFCReceptor);
+                        $receptor.append($("<option />").val(this.cfdRFCReceptor).text(this.cfdRFCReceptor));
+                    }
+                });
+                
+            }
+
+
+                });
+
+    </script>
+}

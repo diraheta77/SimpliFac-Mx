@@ -1,0 +1,531 @@
+﻿@model simplifile.ViewModels.CFDI.PagoViewModel
+@{
+    ViewData["Title"] = "Consulta de CFDI";
+    ViewData["Header"] = "<i class='fa fa-files-o'></i> Consulta de CFDI";
+}
+
+@Html.Modal("viewHtml", ".modalhtmlviewlink", "Consulta CFDI", "", "Ok", "lg")
+
+<div id="test">
+
+</div>
+
+<div class="box">
+    <div class="box-header with-border">
+        <div class="box-tools pull-right" id="example_wrapper">
+            @*<a class='btn btn-primary btn-insert-solicitud' href="~/images/Reporte_CFDI.xlsx">
+                    <i class="fa fa-file-excel-o"></i>
+                    Descargar Datos
+                </a>*@
+        </div>
+    </div>
+    <div class="box-body">
+        <form id="frm-search" class=" filter" action="#">
+            <div class="form-group">
+                <select id="filter_emisor" name="filter_emisor" class="form-control selectpicker">
+                    <option value="">Filtrar por RFC Emisor</option>
+                </select>
+                @*@Html.DropDownList("filter_emisor", "Filtrar por RFC Emisor", new { @class = "form-control selectpicker" })*@
+            </div>
+            <div class="form-group">
+                <select id="filter_receptor" name="filter_receptor" class="form-control selectpicker">
+                    <option value="">Filtrar por RFC Receptor</option>
+                </select>
+                @*@Html.DropDownList("filter_receptor", new[]
+               {
+                    new SelectListItem(){ Text = "SSE951221AX0", Value = "SSE951221AX0"}
+               }, "Filtrar por RFC Receptor", new { @class = "form-control selectpicker" })*@
+            </div>
+            @*<div class="form-group">
+                @Html.DropDownList("filter_proveedor", new[]
+               {
+                    new SelectListItem(){ Text = "Cumplido", Value = "Cumplido"},
+                    new SelectListItem(){ Text = "Incumplido", Value = "Incumplido"}
+               }, "Filtrar por Estatus Proveedor", new { @class = "form-control selectpicker" })
+            </div>*@
+            <div class="form-group has-feedback">
+                <input type="text" class="form-control pull-right date" id="filter_fecha_inicial" placeholder="Fecha CFDI (Inicial)" autocomplete="off" />
+                <span class="fa fa-calendar form-control-feedback"></span>
+            </div>
+            <div class="form-group has-feedback">
+                <input type="text" class="form-control pull-right date" id="filter_fecha_final" placeholder="Fecha CFDI (Final)" autocomplete="off" />
+                <span class="fa fa-calendar form-control-feedback"></span>
+            </div>
+            <div class="btn-container">
+                <button type="button" class="btn btn-default search ">
+                    <i class="fa fa-search"></i>
+                </button>
+                <button type="button" class="btn btn-default reaload-table ">
+                    <i class="fa fa-refresh"></i>
+                </button>
+            </div>
+            <button id="reset-form" type="reset" style="display:none;"></button>
+        </form>
+        <table class="table table-striped table-hover table-responsive dataTable compact stripe text-nowrap" style="width: 100%;" role="grid" aria-describedby="companies_info">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>RFC Emisor</th>
+                    <th>Fecha CFDI</th>
+                    <th>RFC Receptor</th>
+                    <th>Tipo CFDI</th>
+                    <th>UUID</th>
+                    <th>Serie</th>
+                    <th>Folio</th>
+                    <th>IVA ($)</th>
+                    <th>Retención ($)</th>
+                    <th>Subtotal</th>
+                    <th>Total</th>
+                    <th>Estatus CFDI</th>
+                    <th>Estatus Proveedor</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <!-- /.box-body -->
+    <div class="box-footer">
+
+    </div>
+    <!-- /.box-footer-->
+</div>
+<!-- /.box -->
+<!--Modal para hacer el insert-->
+<section>
+    <!-- Modal -->
+    <div class="modal fade" id="newPago" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="exampleModalLabel">Agregar Pago</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-4 form-group">
+                            <label>UUID</label>
+                            <input type="text" id="read-uuid" class="form-control" readonly />
+                        </div>
+                        <div class="col-md-4 form-group">
+                            <label>Tipo Comprobante</label>
+                            <input type="text" id="read-tipocomprob" class="form-control" readonly />
+                        </div>
+                        <div class="col-md-4 form-group">
+                            <label>Serie</label>
+                            <input type="text" id="read-serie" class="form-control" readonly />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 form-group">
+                            <label>RFC Emisor</label>
+                            <input type="text" id="read-rfcemisor" class="form-control" readonly />
+                        </div>
+                        <div class="col-md-4 form-group">
+                            <label>Emisor</label>
+                            <input type="text" id="read-emisor" class="form-control" readonly />
+                        </div>
+                        <div class="col-md-4 form-group">
+                            <label>Folio</label>
+                            <input type="text" id="read-folio" class="form-control" readonly />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 form-group">
+                            <label>RFC Receptor</label>
+                            <input type="text" id="read-rfcreceptor" class="form-control" readonly />
+                        </div>
+                        <div class="col-md-4 form-group">
+                            <label>Receptor</label>
+                            <input type="text" id="read-receptor" class="form-control" readonly />
+                        </div>
+                        <div class="col-md-4 form-group">
+                            <label>Fecha Comprobante</label>
+                            <input type="text" id="read-fechacomprob" class="form-control" readonly />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 form-group">
+                            <label>Forma Pago</label>
+                            <input type="text" id="read-formapago" class="form-control" readonly />
+                        </div>
+                        <div class="col-md-4 form-group">
+                            <label>Metodo Pago</label>
+                            <input type="text" id="read-metodo" class="form-control" readonly />
+                        </div>
+                        <div class="col-md-4 form-group">
+                            <label>Moneda</label>
+                            <input type="text" id="read-moneda" class="form-control" readonly />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3 form-group">
+                            <label>Imp. trasladados</label>
+                            <input type="text" id="read-impTras" class="form-control" readonly />
+                        </div>
+                        <div class="col-md-3 form-group">
+                            <label>Imp. Retenidos</label>
+                            <input type="text" id="read-impRet" class="form-control" readonly />
+                        </div>
+                        <div class="col-md-3 form-group">
+                            <label>SubTotal</label>
+                            <input type="text" id="read-subtotal" class="form-control" readonly />
+                        </div>
+                        <div class="col-md-3 form-group">
+                            <label>Total</label>
+                            <input type="text" id="read-total" class="form-control" readonly />
+                        </div>
+                    </div>
+
+
+                    <form method="post" asp-action="AddPago" id="js-enviar">
+                        <div class="row">
+                            <div class="form-group col-md-4 has-feedback">
+                                <label asp-for="FechaDePago"></label>
+                                <input asp-for="FechaDePago" type="date" class="form-control" placeholder="fecha de pago" />
+                                @*<span class="glyphicon glyphicon-calendar form-control-feedback"></span>*@
+                                <span asp-validation-for="FechaDePago" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-4 has-feedback">
+                                <label asp-for="MontoDePago"></label>
+                                <input asp-for="MontoDePago" type="number" class="form-control" placeholder="monto de pago" />
+                                @*<span class="glyphicon glyphicon-usd form-control-feedback"></span>*@
+                                <span asp-validation-for="MontoDePago" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-4 has-feedback">
+                                <label asp-for="ReferenciaDePago"></label>
+                                <input asp-for="ReferenciaDePago" type="text" class="form-control" placeholder="ref. de pago" />
+                                @*<span class="glyphicon glyphicon-comment form-control-feedback"></span>*@
+                                <span asp-validation-for="ReferenciaDePago" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input asp-for="UUID" type="hidden" />
+                            <button type="reset" class="btn reset" style="display:none;">Reset form</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary guardar">Guardar Cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--Modal para hacer el insert FIN-->
+
+
+<partial name="_ModalDownload" />
+
+
+@section Styles{
+    <link rel="stylesheet" href="~/theme/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+    <partial name="_DatatableStyles" />
+}
+
+@section Scripts{
+    <partial name="_DatatableScripts" />
+
+    <script src="~/theme/bower_components/moment/min/moment.min.js"></script>
+    <script src="~/theme/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="~/theme/bower_components/bootstrap-datepicker/dist/locales/bootstrap-datepicker.es.min.js"></script>
+    @*<partial name="_ScriptForZip" />*@
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.2/FileSaver.min.js"></script>
+
+    <script type="text/javascript">
+        var table = null;
+
+        //se llama desde el boton de dolar para nuevo pago.
+        function mostrarModalInsert(e) {
+            $(".reset").click();
+            var uuid = $(e).data("cfduuid");
+            var rowid = $(e).data("idrow");
+            var datarow = table.row(rowid).data();
+
+            $("#UUID").val(datarow.cfdUUID);
+            $("#read-uuid").val(datarow.cfdUUID);
+            $("#read-tipocomprob").val(datarow.cfdTipoComprobante);
+            $("#read-rfcemisor").val(datarow.cfdRFCEmisor);
+            $("#read-emisor").val(datarow.cfdNombreEmisor);
+            $("#read-rfcreceptor").val(datarow.cfdRFCReceptor);
+            $("#read-receptor").val(datarow.cfdNombreReceptor);
+            $("#read-serie").val(datarow.cfdSerie);
+            $("#read-folio").val(datarow.cfdFolio);
+            $("#read-fechacomprob").val(datarow.cfdFechaEmision);
+            $("#read-formapago").val(datarow.cfdFormaPago);
+            $("#read-metodo").val(datarow.cfdMetodoPago);
+            $("#read-moneda").val(datarow.cfdMoneda);
+            $("#read-impTras").val(datarow.cfdTotalImpuestosTrasladados);
+            $("#read-impRet").val(datarow.cfdTotalImpuestosRetenidos);
+            $("#read-subtotal").val(datarow.cfdSubtotalCFDI);
+            $("#read-total").val(datarow.cfdTotalCFDI);
+        }
+
+        $(function () {
+
+            $(".guardar").click(function () {
+                debugger;
+                var form = $("#js-enviar");
+                if (!form.valid()) return;
+
+                form.addClass('was-validated');
+                $("#js-enviar").submit();
+            })
+
+                    $('body').on('focus', ".date", function () {
+                        $(this).datepicker({
+                            //endDate: new Date(),
+                            language: 'es',
+                            autoclose: true,
+                            format: 'dd/mm/yyyy'
+                        })
+                    });
+
+                    table = $(".table").DataTable({
+                        "processing": true,
+                        "serverSide": false,
+                        "ordering": true,
+                        "searching": true,
+                        "lengthChange": true,
+                        "colReorder": true,
+                        "responsive": true,
+                        scrollX: true,
+                        stateSave: true,
+                        select: {
+                            style: 'multi',
+                            //selector: 'td:first-child'
+                        },
+                        "language": {
+                            "url": "@Url.Content("~/langs/data-table-es.json")"
+                        },
+                        dom: 'Bfrtip',
+                        order: [[1, 'asc']],
+                        buttons: [
+                            {
+                                extend: 'colvis', text: 'Visibilidad Columnas',
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9,10,11]
+                            },
+                            {
+                                extend: 'excel', text: 'Exportar a Excel',
+                                exportOptions: {
+                                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9,10,11]
+                                }
+                            },
+                            {
+                                text: 'Enviar Seleccion por Correo',
+                                action: function (e, dt, node, config) {
+                                    $("#btnmodal").click();
+                                }
+                            },
+                        ],
+                        columns: [
+                            { data: null, defaultContent: '', orderable: false, searchable:false },
+                            { data: "cfdRFCEmisor" },
+                            { data: "cfdFechaEmision" },
+                            { data: "cfdRFCReceptor" },
+                            { data: "cfdTipoComprobante" },
+                            { data: "cfdUUID" },
+                            { data: "cfdSerie" },
+                            { data: "cfdFolio" },
+                            { data: "cfdTotalImpuestosTrasladados" },
+                            { data: "cfdTotalImpuestosRetenidos" },
+                            { data: "cfdSubtotalCFDI" },
+                            { data: "cfdTotalCFDI" },
+                            { data: null, "defaultContent": '' },
+                            { data: null, defaultContent: '' },
+                            {
+                                "orderable": false,
+                                "data": null,
+                                "defaultContent": ''
+                            },
+                        ],
+                        columnDefs: [
+                            //{
+                            //    "render": function (data, type, row, meta) {
+                            //        if (data.cfdTipoComprobante == 'I') {
+                            //            return "<button class='btn btn-info' onclick='mostrarModalInsert(this);' data-toggle='modal' data-target='#newPago' data-cfdUUID='" + data.cfdUUID + "' data-idrow='" + meta.row +"'> <strong>$</strong> </button>";
+                            //        }
+
+                            //    },
+                            //    "targets": [0]
+                            //},
+                            {
+                                'targets': 0,
+                                'checkboxes': {
+                                    'selectRow': true
+                                }
+                            },
+                            {
+                                "render": function (data, type, row) {
+                                    return moment(data).format('DD-MM-YYYY');
+                                },
+                                "targets": [2]
+                            },
+                            {
+                                "render": function (data, type, row) {
+                                    //debugger;
+                                    return "<span class='label label-success'>" + data.cfdiStatus +"</span>";
+                                },
+                                "targets": [12]
+                            },
+                            {
+                                "render": function (data, type, row) {
+                                    //debugger;
+                                    return "<span class='label label-success'>Cumplido</span>";
+                                },
+                                "targets": [13]
+                            },
+                            {
+                                render: function (data, type, row, meta) {
+                                    if (data.cfdTipoComprobante == 'I') {
+                                        var newfile = `
+<a onclick="mostrarModalInsert(this);" type="button" class="btn btn-default btn-xs btn-update-param" data-toggle="modal" data-placement="left" data-target='#newPago' title="Agregar pago" data-cfdUUID=${data.cfdUUID} data-idrow=${meta.row}> <i class="fa fa-dollar"></i> </a>
+                <a data-url="@Url.Content("~/")api/cfdi/html/${data.cfdUUID}" type="button" class="btn btn-default btn-xs btn-update-param modalhtmlviewlink" data-toggle="tooltip" data-placement="left" title="Ver CFDI"><i class="fa fa-eye"></i></a>
+                <a target="_blank" href="@Url.Content("~/")api/cfdi/pdf/${data.cfdUUID}" type="button" class="btn btn-default btn-xs btn-update-param" data-toggle="tooltip" data-placement="left" title="PDF"><i class="fa fa-file-pdf-o"></i></a>
+                <a target="_blank" href="@Url.Content("~/")api/xml/${data.cfdUUID}" type="button" class="btn btn-default btn-xs btn-update-param" data-toggle="tooltip" data-placement="left" title="XML"><i class="fa fa-file-code-o"></i></a>
+                `;
+                                    }
+                                    else {
+                                        var newfile = `
+                <a data-url="@Url.Content("~/")api/cfdi/html/${data.cfdUUID}" type="button" class="btn btn-default btn-xs btn-update-param modalhtmlviewlink" data-toggle="tooltip" data-placement="left" title="Ver CFDI"><i class="fa fa-eye"></i></a>
+                <a target="_blank" href="@Url.Content("~/")api/cfdi/pdf/${data.cfdUUID}" type="button" class="btn btn-default btn-xs btn-update-param" data-toggle="tooltip" data-placement="left" title="PDF"><i class="fa fa-file-pdf-o"></i></a>
+                <a target="_blank" href="@Url.Content("~/")api/xml/${data.cfdUUID}" type="button" class="btn btn-default btn-xs btn-update-param" data-toggle="tooltip" data-placement="left" title="XML"><i class="fa fa-file-code-o"></i></a>
+                `;
+                                    }
+
+                        return newfile;
+                                },
+                                targets:[14]
+                            }
+                        ]
+                    })//fin datatable...
+
+                    //carga todo
+                    $.get("@Url.Content("~/")api/cfdi/consulta").done(function (result) {
+                    console.log(result);
+                    table.clear();
+                    table.rows.add(result).draw();
+                        FillDropDowns(result);
+                    });
+
+            $(".reaload-table").click(function () {
+                $("#reset-form").click();
+                $.get("@Url.Content("~/")api/cfdi/consulta").done(function (result) {
+                    console.log(result);
+                    table.clear();
+                    table.rows.add(result).draw();
+                        FillDropDowns(result);
+                    });
+            });
+
+            function FillDropDowns(data) {
+                var $emisor = $("#filter_emisor");
+                var datos = new Array();
+
+                $.each(data, function () {
+                    if (!datos.includes(this.cfdRFCEmisor)) {
+                        datos.push(this.cfdRFCEmisor);
+                        $emisor.append($("<option />").val(this.cfdRFCEmisor).text(this.cfdRFCEmisor));
+                    }
+                });
+
+                ///////////////receptor
+                var $receptor = $("#filter_receptor");
+                datos = new Array();
+                $.each(data, function () {
+                    if (!datos.includes(this.cfdRFCReceptor)) {
+                        datos.push(this.cfdRFCReceptor);
+                        $receptor.append($("<option />").val(this.cfdRFCReceptor).text(this.cfdRFCReceptor));
+                    }
+                });
+            }
+
+            //var $dropdown = $("#dropdown");
+            //$.each(result, function () {
+            //    $dropdown.append($("<option />").val(this.ImageFolderID).text(this.Name));
+            //});
+
+            //carga segun busqueda
+            $(".search").click(function () {
+                var params = {
+                    emisor: $("#filter_emisor option:selected").val(),
+                    receptor: $("#filter_receptor option:selected").val(),
+                    //status_prov: $("#filter_proveedor option:selected").val(),
+                    fechai: $("#filter_fecha_inicial").val(),
+                    fechaf: $("#filter_fecha_final").val()
+                }
+
+                $.get("@Url.Content("~/")api/cfdi/consulta", params).done(function (result) {
+                    console.log(result);
+                    table.clear();
+                    table.rows.add(result).draw();
+                    });
+            });
+
+
+
+            //bloque para hacer las descargas en archivos zip...
+            $("#btnProcesarZip").click(function () {
+                debugger;
+                var xml = false;
+                var pdf = false;
+                var uuidlist = [];
+                var urlzip = "";
+                //var parametroid = $(this).data("uuid");
+                if ($("#todoxml").is(":checked")) {
+                    xml = true;
+                }
+                if ($("#todopdf").is(":checked")) {
+                    pdf = true;
+                }
+
+                if (xml || pdf) {
+                    var count = table.rows({ selected: true }).count();
+                    var objeto = table.rows({ selected: true });
+                    objeto[0].forEach(function (value) {
+                        var datarow = table.row(value).data();
+                        var uuid = null;
+                        debugger;
+                        if (datarow.hasOwnProperty("crnUUID")) {
+                            uuidlist.push(datarow.crnUUID);
+                        } else if (datarow.hasOwnProperty("cnnUUID")) {
+                            uuidlist.push(datarow.cnnUUID);
+                        } else if (datarow.hasOwnProperty("cfdUUID")) {
+                            uuidlist.push(datarow.cfdUUID);
+                        }
+                    });
+
+                    if (uuidlist.length > 0) {
+
+                        if (xml == true && pdf == true) {
+                            urlzip = `@Url.Content("~/")api/cfdi/zip/${uuidlist}`;
+                        } else if (xml) {
+                            urlzip = `@Url.Content("~/")api/cfdi/xml/zip/${uuidlist}`
+                        } else if (pdf) {
+                            urlzip = `@Url.Content("~/")api/cfdi/pdf/zip/${uuidlist}`
+                        }
+                        $("#downloadzip").attr("href", urlzip);
+                        document.getElementById("downloadzip").click();
+                    } else {
+                        alert("No hay registros seleccionados");
+                    }
+                } else {
+                    alert("No hay opcion seleccionada");
+                }
+            });
+
+                });
+
+    </script>
+}
+
+
+
+
+

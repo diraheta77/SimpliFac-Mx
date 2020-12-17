@@ -1,0 +1,81 @@
+﻿
+@model simplifile.ViewModels.UnidadNegocio.UnidadNegocioModificarViewModel
+<!-- Modal -->
+<div class="modal-body">
+    <form asp-action="Update" enctype="multipart/form-data" method="post">
+
+        <div class="form-group">
+            <label asp-for="UnId"></label>
+            <input asp-for="UnId" class="form-control" readonly />
+            <span asp-validation-for="UnId" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="EmpId"></label>
+            <input type="hidden" asp-for="EmpId" />
+            <input asp-for="EmpNombre" class="form-control" readonly />
+            <span asp-validation-for="EmpId" class="text-danger"></span>
+        </div>
+        @{
+            var cargadoFiel = Model.UnEstatus != 2 ? "(Cargado previamente)" : "(Sin cargar)";
+
+        }
+        <div class="form-group">
+            <label asp-for="UnRazonSocial"></label>
+            @if (User.HasRoles("admin", "manager"))
+            {
+                <input asp-for="UnRazonSocial" class="form-control" />
+            }
+            else
+            {
+                <input asp-for="UnRazonSocial" class="form-control" readonly />
+            }
+
+            <span asp-validation-for="UnRazonSocial" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="UnRFC"></label>
+            @if (User.HasRoles("admin", "manager"))
+            {
+                <input asp-for="UnRFC" class="form-control" />
+            }
+            else
+            {
+                <input asp-for="UnRFC" class="form-control" readonly />
+            }
+            <span asp-validation-for="UnRFC" class="text-danger"></span>
+        </div>
+
+
+        <div class="form-group">
+            <div>
+                <div class="checkbox-inline ">
+                    <label>
+                        <input type="checkbox" asp-for="CargaFiel" id="carga-fiel" />
+                        <label asp-for="CargaFiel"></label> @cargadoFiel
+                    </label>
+                </div>
+            </div>
+        </div>
+        @{
+            var hide = Model.CargaFiel ? "block" : "none";
+        }
+        <div id="field-data" style="display:@hide">
+            <div class="form-group">
+                <label asp-for="CerFiel"></label>
+                <input type="file" asp-for="CerFiel" class="form-control" accept=".cer" />
+                <span asp-validation-for="CerFiel" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="KeyFiel"></label>
+                <input type="file" asp-for="KeyFiel" class="form-control" accept=".key" />
+                <span asp-validation-for="KeyFiel" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PaswordFiel"></label>
+                <input asp-for="PaswordFiel" type="password" class="form-control" />
+                <span asp-validation-for="PaswordFiel" class="text-danger"></span>
+            </div>
+        </div>
+
+    </form>
+</div>

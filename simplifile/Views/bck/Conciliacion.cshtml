@@ -1,0 +1,308 @@
+﻿@{
+    ViewData["Title"] = "Conciliación de Pagos";
+    ViewData["Header"] = "<i class='fa fa-dollar (alias)'></i> Conciliación de Pagos";
+
+}
+
+@Html.Modal("viewHtml", ".modalhtmlviewlink", "Pagos", "", "OK", "lg", false)
+
+<div class="box">
+    @*<div class="box-header with-border">
+            <div class="box-tools pull-right">
+                <a class='btn btn-primary btn-insert-solicitud' href="~/images/Reporte_CFDI.xlsx">
+                    <i class="fa fa-file-excel-o"></i>
+                    Descargar Datos
+                </a>
+            </div>
+        </div>*@
+    <div class="box-body">
+        <form id="frm-search" class=" filter" action="#">
+            <div class="form-group">
+                @Html.DropDownList("filter_estatus", new[]
+              {
+                   new SelectListItem(){ Text = "FOCG681108QQ4", Value = "0"},
+                   new SelectListItem(){ Text = "GRS061012MQ4", Value = "2"},
+                   new SelectListItem(){ Text = "LMC741212JN6", Value = "1"}
+              }, "Filtrar por RFC Emisor", new { @class = "form-control selectpicker" })
+            </div>
+            <div class="form-group">
+                @Html.DropDownList("filter_estatus", new[]
+               {
+                    new SelectListItem(){ Text = "0%", Value = "0"},
+                    new SelectListItem(){ Text = "<=50%", Value = "1"},
+                    new SelectListItem(){ Text = ">=50%", Value = "2"},
+                    new SelectListItem(){ Text = "100%", Value = "2"}
+               }, "Filtrar por Estatus Conciliación", new { @class = "form-control selectpicker" })
+            </div>
+            <div class="form-group has-feedback">
+                <input type="text" class="form-control pull-right date" id="filter_fecha_inicial" placeholder="Fecha Factura (Inicial)" autocomplete="off" />
+                <span class="fa fa-calendar form-control-feedback"></span>
+            </div>
+            <div class="form-group has-feedback">
+                <input type="text" class="form-control pull-right date" id="filter_fecha_final" placeholder="Fecha Factura (Final)" autocomplete="off" />
+                <span class="fa fa-calendar form-control-feedback"></span>
+            </div>
+            <div class="btn-container">
+                <button type="submit" class="btn btn-default ">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+
+        </form>
+        <table id="tb-confacturas" class="table table-striped table-hover table-responsive dataTable compact stripe text-nowrap" style="width: 100%;" role="grid" aria-describedby="companies_info">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>RFC Emisor</th>
+                    <th>Fecha Factura</th>
+                    <th>UUID</th>
+                    <th>Serie</th>
+                    <th>Folio</th>
+                    <th>IVA ($)</th>
+                    <th>Retención ($)</th>
+                    <th>Subtotal</th>
+                    <th>Total</th>
+                    <th>Estatus CFDI</th>
+                    <th>Existe</th>
+                    <th>Estatus Conciliación</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <!-- /.box-body -->
+    <div class="box-footer">
+
+    </div>
+    <!-- /.box-footer-->
+</div>
+<!-- /.box -->
+
+<partial name="_ModalDownload" />
+
+
+
+@section Styles{
+    <link rel="stylesheet" href="~/theme/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/datatable-responsive/css/responsive.dataTables.min.css">
+    <style type="text/css">
+        td.details-control {
+            background: url('../images/details_open.png') no-repeat center center;
+            cursor: pointer;
+        }
+
+        tr.shown td.details-control {
+            background: url('../images/details_close.png') no-repeat center center;
+        }
+
+        .oculto {
+            display: none;
+        }
+
+        li.sub-menu {
+            position: relative;
+        }
+
+            li.sub-menu span.glyphicon {
+                font-size: 0.7em;
+            }
+
+            li.sub-menu:hover .dropdown-menu {
+                display: block;
+                top: 0;
+                left: 100%;
+            }
+    </style>
+    <link href="https://cdn.datatables.net/buttons/1.6.2/css/buttons.dataTables.min.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css" rel="stylesheet" />
+    <link href="https://gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/css/dataTables.checkboxes.css" rel="stylesheet" />
+}
+
+@section Scripts{
+    <script src="~/theme/bower_components/datatables/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.21/cr-1.5.2/datatables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
+    <script src="https://gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/js/dataTables.checkboxes.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.colVis.min.js"></script>
+
+    <script src="~/theme/bower_components/moment/min/moment.min.js"></script>
+    <script src="~/theme/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="~/theme/bower_components/bootstrap-datepicker/dist/locales/bootstrap-datepicker.es.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.2/FileSaver.min.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+
+            $('body').on('focus', ".date", function () {
+                $(this).datepicker({
+                    endDate: new Date(),
+                    language: 'es',
+                    autoclose: true,
+                    format: 'dd/mm/yyyy'
+                })
+            });
+
+            var table = $("#tb-confacturas").DataTable({
+                 "processing": true,
+            "serverSide": false,
+            "ordering": true,
+            "searching": true,
+            "lengthChange": true,
+            "colReorder": true,
+            //"pagingType": "simple",
+            "responsive": true,
+            scrollX: true,
+            order: [[1, 'asc']],
+            stateSave: true,
+            "language": {
+                "url": "@Url.Content("~/langs/data-table-es.json")"
+            },
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'colvis', text: 'Visibilidad Columnas',
+                        //columns: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+                    },
+                    {
+                        extend: 'excel', text: 'Exportar a Excel',
+                        exportOptions: {
+                            columns: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+                        }
+                    },
+                    //{
+                    //    text: 'Enviar Seleccion por Correo',
+                    //    action: function (e, dt, node, config) {
+                    //        $("#btnmodal").click();
+                    //    }
+                    //}
+                ],
+                columns: [
+                    {
+                        "className": 'details-control',
+                        "orderable": false,
+                        "data": null,
+                        "defaultContent": '',
+                        width: 50
+                    },
+                    { data: "cfdRFCEmisor" },
+                    { data: "cfdFechaEmision" },
+                    { data: "cfdUUID" },
+                    { data: "cfdSerie" },
+                    { data: "cfdFolio" },
+                    { data: "cfdTotalImpuestosTrasladados" },
+                    { data: "cfdTotalImpuestosRetenidos" },
+                    { data: "cfdSubtotalCFDI" },
+                    { data: "cfdTotalCFDI" },
+                    {
+                        data: null,
+                        defaultContent: '<span class="label label-success">Activo</span>'
+                    },
+                    {
+                        data: "existe",
+                    },
+                    {
+                        "orderable": false,
+                        "defaultContent": ''
+                    },
+                    {
+                        "orderable": false,
+                        "defaultContent": ''
+                    },
+                ],
+                columnDefs: [
+                    {
+                        "render": function (data, type, row) {
+                            return moment(data).format('DD-MM-YYYY');
+                        },
+                        "targets": [2]
+                    },
+                    {
+                    render: function (data, type, row) {
+                        var newfile = `
+                <a data-url="@Url.Content("~/")api/cfdi/html/${row.cfdUUID}" type="button" class="btn btn-default btn-xs btn-update-param modalhtmlviewlink" data-toggle="tooltip" data-placement="left" title="Ver CFDI"><i class="fa fa-eye"></i></a>
+                <a target="_blank" href="@Url.Content("~/")api/cfdi/pdf/${row.cfdUUID}" type="button" class="btn btn-default btn-xs btn-update-param" data-toggle="tooltip" data-placement="left" title="PDF"><i class="fa fa-file-pdf-o"></i></a>
+                <a target="_blank" href="@Url.Content("~/")api/xml/${row.cfdUUID}" type="button" class="btn btn-default btn-xs btn-update-param" data-toggle="tooltip" data-placement="left" title="XML"><i class="fa fa-file-code-o"></i></a>
+                        `;
+                        return newfile;
+                    },
+                    targets: [13]
+                }
+                ]
+            });
+
+            $.get("@Url.Content("~/")api/cfdi/confacturas").done(function (result) {
+            console.log(result);
+            table.clear();
+            table.rows.add(result).draw();
+            });
+
+
+            $('#tb-confacturas tbody').on('click', 'td.details-control', function () {
+                var tr = $(this).closest('tr');
+                var row = table.row(tr);
+
+                if (row.child.isShown()) {
+                    // This row is already open - close it
+                    row.child.hide();
+                    tr.removeClass('shown');
+                }
+                else {
+                    // Open this row
+                    var _child = format(row.data());
+                    row.child(_child).show();
+                    tr.addClass('shown');
+                }
+            });
+
+            //funcion que construye un row que se mostrara como hijo del row seleccionado.
+            function format(d) {
+                // `d` es el objeto original datarow
+                debugger;
+                var mytable = "<table class='table table-hover dataTable nowrap stripe row-border order-column' style='width: 50%;'><thead><tr>";
+                mytable += "<th>RFC Emisor</th>";
+                mytable += "<th>Fecha CRP</th>";
+                mytable += "<th>UUID CRP</th>";
+                mytable += "<th>Total</th>";
+                mytable += "<th>Estatus CRP</th>";
+                mytable += "<th>Acciones</th>";
+                mytable += "</tr>";
+                mytable += "</thead>";
+                mytable += "<tbody>";
+
+                d.nominaDetalles.forEach(function (detalle) {
+                    var _texto = "";
+                    if (detalle.crnNaturaleza === "D") {
+                        _texto = "Deducción";
+                    }
+                    if (detalle.crnNaturaleza === "P") {
+                        _texto = "Percepción";
+                    }
+                    var newRow = `
+                <tr>
+                <td>${_texto}</td>
+                <td>${detalle.crnTipo}</td>
+                <td>${detalle.crnClave}</td>
+                <td>${detalle.crnConcepto}</td>
+                <td>${detalle.crnImporte}</td>
+                </tr>
+                `;
+                    mytable += newRow;
+                })
+                mytable += "</tbody></table>";
+                return mytable;
+            }
+
+        });
+
+    </script>
+}

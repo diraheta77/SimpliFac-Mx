@@ -1,0 +1,61 @@
+﻿
+@model simplifile.ViewModels.Account.LoginViewModel
+@inject simplifile.Services.IParamaters parameters
+@{
+    Html.AddCssBody("login-page");
+    ViewData["Title"] = "Recuperar contraseña";
+    Layout = "~/Views/Shared/_Auth.cshtml";
+    ViewData["NuevaEmpresas"] = parameters.getGenParam(simplifile.Services.ParamsKeys.G09, "false");
+}
+
+<div class="login-box">
+    <div class="login-logo">
+        <img src="~/images/logo2.png" />
+    </div>
+    <!-- /.login-logo -->
+    <div class="login-box-body">
+        <h3 class="login-box-msg">
+            <i class="fa fa-unlock"></i>
+            Recuperar contraseña
+        </h3>
+
+        <form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post">
+
+            <div class="form-group has-feedback">
+                <input asp-for="Email" type="email" class="form-control" placeholder="Email" />
+                <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            @if (ViewData.ContainsKey("Status") && (bool)ViewData["Status"] == true)
+            {
+                <div class="">
+                    <h4 class="text-green">Correo enviado</h4>
+
+                    <p class="text-green">Le hemos enviado un email con instrucciones para cambiar su contraseña.En caso de no recibir dicho correo, lo puede solicitar nuevamente</p>
+                </div>
+            }
+
+            <div class="row">
+                <div class="col-xs-12 text-right">
+
+                    <button type="submit" class="btn btn-primary btn-flat">
+                        Recuperar contraseña
+                        <i class="fa fa-check-square-o"></i>
+
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <div class="text-right mt-5">
+            @if (@ViewData["NuevaEmpresas"].ToString() == "true")
+            {
+                <a asp-controller="Account" asp-action="Register" class="text-center">Registrarse como nuevo usuario</a>
+            }
+        </div>
+
+
+    </div>
+    <!-- /.login-box-body -->
+</div>
+

@@ -1,0 +1,154 @@
+﻿
+
+@model simplifile.ViewModels.RequisicionSat.RequisicionSatInsertarViewModel
+
+<!-- Modal -->
+<div class="modal-body">
+    <form asp-action="Insert">
+        <div class="row">
+            <div class="col-md-5 form-group">
+                <label asp-for="EmpId"></label>
+                <select asp-for="EmpId"
+                        asp-items="@(ViewBag.Empresas)" class="form-control dl_empresas">
+                    <option value="">Seleccione la empresa</option>
+                </select>
+                <span asp-validation-for="EmpId" class="text-danger"></span>
+            </div>
+            <div class="col-md-5 form-group">
+                <label asp-for="UnId"></label>
+                <select asp-for="UnId"
+                        asp-items="@(ViewBag.Unidades)" class="form-control dl_unidades">
+                    <option value="">Seleccione la unidad</option>
+                </select>
+                <span asp-validation-for="EmpId" class="text-danger"></span>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-5 form-group has-feedback">
+                <label asp-for="RsFechaInfoInicio"></label>
+                <input asp-for="RsFechaInfoInicio" type="text" class="form-control date" autocomplete="off" readonly />
+                <span class="fa fa-calendar form-control-feedback" style="display:inline-flex !important;"></span>
+                <span asp-validation-for="RsFechaInfoInicio" class="text-danger"></span>
+            </div>
+            <div class="col-md-5 form-group  has-feedback">
+                <label asp-for="RsFechaInfoFinal"></label>
+                <input asp-for="RsFechaInfoFinal" type="text" class="form-control date" autocomplete="off" readonly />
+                <span class="fa fa-calendar form-control-feedback" style="display:inline-flex !important;"></span>
+                <span asp-validation-for="RsFechaInfoFinal" class="text-danger"></span>
+            </div>
+        </div>
+
+        <h5><strong>Figura Unidad de Negocio</strong></h5>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-check">
+                    <input class="form-check-input" value="EMISOR" type="radio" name="radio1" onchange="setValor(this);" checked>
+                    <label class="form-check-label">Emisor</label>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-check">
+                    <input class="form-check-input" value="RECEPTOR" type="radio" name="radio1" onchange="setValor(this);">
+                    <label class="form-check-label">Receptor</label>
+                </div>
+            </div>
+        </div>
+
+
+        <h5><strong>Tipo CFDI</strong></h5>
+        <div class="row">
+            @if (User.HasRoles("admin", "manager"))
+            {
+                <div class="col-md-3">
+                    <div class="custom-control custom-checkbox">
+                        <input class="custom-control-input" asp-for="Ingreso" type="checkbox" id="customCheckbox0" />
+                        <label for="customCheckbox0" class="">Ingreso</label>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="custom-control custom-checkbox">
+                        <input class="custom-control-input" asp-for="Egreso" type="checkbox" id="customCheckbox1" />
+                        <label for="customCheckbox1" class="">Egreso</label>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="custom-control custom-checkbox">
+                        <input class="custom-control-input" asp-for="ComplementoPago" type="checkbox" id="customCheckbox2" />
+                        <label for="customCheckbox2" class="">Complemento de Pago</label>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="custom-control custom-checkbox">
+                        <input class="custom-control-input" asp-for="ReciboNomina" type="checkbox" id="customCheckbox3" />
+                        <label for="customCheckbox3" class="">Recibo de Nomina</label>
+                    </div>
+                </div>
+            }
+            @if (User.HasRoles("nomina"))
+            {
+                <div class="col-md-3">
+                    <div class="custom-control custom-checkbox">
+                        <input class="custom-control-input" asp-for="Ingreso" type="checkbox" id="customCheckbox0" disabled="disabled" />
+                        <label for="customCheckbox0" class="">Ingreso</label>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="custom-control custom-checkbox">
+                        <input class="custom-control-input" asp-for="Egreso" type="checkbox" id="customCheckbox1" disabled="disabled" />
+                        <label for="customCheckbox1" class="">Egreso</label>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="custom-control custom-checkbox">
+                        <input class="custom-control-input" asp-for="ComplementoPago" type="checkbox" id="customCheckbox2" disabled="disabled" />
+                        <label for="customCheckbox2" class="">Complemento de Pago</label>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="custom-control custom-checkbox">
+                        <input class="custom-control-input" asp-for="ReciboNomina" type="checkbox" id="customCheckbox3" checked />
+                        <label for="customCheckbox3" class="">Recibo de Nomina</label>
+                    </div>
+                </div>
+            }
+
+        </div>
+
+        <input asp-for="FiguraUnidadNegocio" type="text" value="EMISOR" style="display:none;" />
+        @*<div class="form-group">
+                <label asp-for="EmpId"></label>
+                <select asp-for="EmpId"
+                        asp-items="@(ViewBag.Empresas)" class="form-control dl_empresas">
+                    <option value="">Seleccione la empresa</option>
+                </select>
+                <span asp-validation-for="EmpId" class="text-danger"></span>
+            </div>*@
+
+        @*<div class="form-group">
+                <label asp-for="UnId"></label>
+                <select asp-for="UnId"
+                        asp-items="@(ViewBag.Unidades)" class="form-control dl_unidades">
+                    <option value="">Seleccione la unidad</option>
+                </select>
+                <span asp-validation-for="EmpId" class="text-danger"></span>
+            </div>*@
+
+
+        @*<div class="form-group has-feedback">
+                <label asp-for="RsFechaInfoInicio"></label>
+                <input asp-for="RsFechaInfoInicio" type="text" class="form-control date" autocomplete="off" readonly/>
+                <span class="fa fa-calendar form-control-feedback"></span>
+                <span asp-validation-for="RsFechaInfoInicio" class="text-danger"></span>
+            </div>
+            <div class="form-group  has-feedback">
+                <label asp-for="RsFechaInfoFinal"></label>
+                <input asp-for="RsFechaInfoFinal" type="text" class="form-control date" autocomplete="off" readonly />
+                <span class="fa fa-calendar form-control-feedback"></span>
+                <span asp-validation-for="RsFechaInfoFinal" class="text-danger"></span>
+            </div>*@
+
+
+    </form>
+</div>

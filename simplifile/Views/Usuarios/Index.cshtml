@@ -1,0 +1,204 @@
+﻿@{
+    ViewData["Title"] = "Usuarios";
+    ViewData["Header"] = "<i class='fa fa-users'></i> Administrar usuarios";
+
+}
+
+
+@Html.Modal("insert-usuario", ".btn-insert-usuario", "Insertar usuario", "fa fa-edit", "Guardar datos", "md")
+@Html.Modal("update-usuario", ".btn-update-usuario", "Modificar usuario", "fa fa-edit", "Guardar datos", "md")
+@Html.Modal("delete-usuario", ".btn-delete-usuario", "Eliminar usuario", "fa fa-trash", "Continuar", "sm")
+@Html.Modal("password-usuario", ".btn-password-usuario", "Cambiar contraseña ", "fa fa-lock", "Confirmar", "sm")
+<!-- Default box -->
+<div class="box">
+    <div class="box-header with-border">
+        <div class="box-tools pull-right">
+            <button id="" type="button" data-url="@Url.Action("Insert")" class='btn btn-primary btn-insert-usuario' data-toggle="tooltip" data-placement="left" title="Insertar">
+                <i class="fa fa-plus-square"></i>
+                Crear nuevo usuario
+            </button>
+        </div>
+
+    </div>
+    <div class="box-body">
+        <form id="frm-search" class="filter" action="#">
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Correo" id="filter_email">
+            </div>
+            <div class="form-group">
+                @Html.DropDownList("filter_emp_id", ViewBag.Empresas, "Filtrar por empresa", new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Filtrar por nombre" id="filter_fullname">
+            </div>
+            <div class="form-group">
+                @Html.DropDownList("filter_rol", new[]
+               {
+                    new SelectListItem(){ Text = "Administrador de la solución", Value = "admin"},
+                    new SelectListItem(){ Text = "Administrador de empresa", Value = "manager"},
+                    new SelectListItem(){ Text = "Usuario funcional", Value = "client"}
+               }, "Filtrar por rol", new { @class = "form-control" })
+            </div>
+            <div class="btn-container">
+                <button type="submit" class="btn btn-default ">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+        </form>
+        <table id="companies" class="display" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Id Usuario</th>
+                    <th>Correo</th>
+                    <th>Rol</th>
+                    <th>Empresa</th>
+                    <th>Nombre completo</th>
+                    <th class="text-center">Estatus</th>
+                    <th class="all"></th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <!-- /.box-body -->
+    <div class="box-footer">
+
+    </div>
+    <!-- /.box-footer-->
+</div>
+<!-- /.box -->
+
+
+@section Styles{
+    <link rel="stylesheet" href="~/theme/bower_components/datatables/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="~/lib/datatable-responsive/css/responsive.dataTables.min.css">
+}
+
+@section Scripts{
+
+    <script src="~/theme/bower_components/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="~/theme/bower_components/datatables-bs/js/dataTables.bootstrap.min.js"></script>
+    <script src="~/lib/datatable-responsive/js/dataTables.responsive.min.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            var table = $('#companies').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "ordering": false,
+                "searching": false,
+                "lengthChange": true,
+                "pagingType": "simple",
+                "responsive":true,
+                "language": {
+                    "url": "@Url.Content("~/langs/data-table-es.json")"
+                },
+                "ajax":
+                {
+                    "url": "@Url.Content("~/")api/usuarios",
+                    "data": function (d) {
+                        var page = 1;
+                        var length = d.length;
+                        if (d.start % d.length == 0) {
+                            page = (d.start / d.length) + 1;
+                        } else {
+                            page = (d.start / d.length);
+                        }
+                        d = {};
+                        d.page = page;
+                        d.length = length;
+                        d.femail = $('#filter_email').val();
+                        d.fempid = $('#filter_emp_id').val();
+                        d.fnombre = $('#filter_fullname').val();
+                        d.frol = $('#filter_rol').val();
+
+                        return d;
+                    }
+                },
+                "columns": [
+                    { "data": "usuId" },
+                    { "data": "usuCorreo" },
+                    { "data": "usuRol" },
+                    { "data": "empresa" },
+                    { "data": "usuNombreCompleto" },
+                    { "data": "usuEstatus" },
+                    { "data": "" },
+                ],
+                "columnDefs": [
+
+                    { "visible": false, "targets": 0 },
+                    {
+                        // The `data` parameter refers to the data for the cell (defined by the
+                        // `data` option, which defaults to the column being worked with, in
+                        // this case `data: 0`.
+                        "render": function (data, type, row) {
+                            if (data) {
+                                switch (data) {
+                                    case "admin":
+                                        return '<b>Administrador de la solución</b>';
+                                    case "manager":
+                                        return '<b>Administrador de empresa</b>';
+                                    case "client":
+                                        return '<b>Usuario funcional</b>';
+                                }
+
+                            }
+                            return '<b>Sin definir</b>';
+                        },
+                        "targets": 2
+                    },
+                    {
+                        // The `data` parameter refers to the data for the cell (defined by the
+                        // `data` option, which defaults to the column being worked with, in
+                        // this case `data: 0`.
+                        "render": function (data, type, row) {
+                            if (data) {
+                                return '<b>' + data.empRazonSocial + '</b>';
+                            }
+                            return '<b>Sin definir</b>';
+                        },
+                        "targets": 3
+                    },
+                    {
+                        "render": function (data, type, row) {
+                            if (data == 1) {
+                                return `
+                                                        <div class="text-center">
+                                                            <input type="checkbox" checked disabled>
+                                                        </div>
+                                                    `;
+                            } else {
+                                return `
+                                                        <div class="text-center">
+                                                            <input type="checkbox" disabled>
+                                                        </div>
+                                                    `;
+                            }
+
+                        },
+                        "targets": 5
+                    },
+                    {
+                        "render": function (data, type, row) {
+                            return `
+                                                   <div class="text-right">
+                                                        <button id="" type='button' data-url='@Url.Content("~/")usuarios/update/`+ row.usuId + `' class='btn btn-default btn-sm btn-update-usuario' data-toggle="tooltip" data-placement="left" title="Modificar"><i class="fa fa-edit"></i></button>
+                                                        <button id="" type='button' data-url='@Url.Content("~/")usuarios/password/`+ row.usuId + `' class='btn btn-default btn-sm btn-password-usuario' data-toggle="tooltip" data-placement="left" title="Cambiar contraseña"><i class="fa fa-lock"></i></button>
+                                                        <button id="" type='button' data-url='@Url.Content("~/")usuarios/delete/`+ row.usuId + `' class='btn btn-default btn-sm btn-delete-usuario' data-toggle="tooltip" data-placement="left" title="Eliminar"><i class="fa fa-trash-o"></i></button>
+                                                    </div>
+                                                `;
+                        },
+                        "targets": 6
+                    }
+                ]
+            });
+
+            $('#frm-search').submit(function (e) {
+                e.preventDefault();
+                table.draw();
+            });
+        });
+
+    </script>
+}
+
+

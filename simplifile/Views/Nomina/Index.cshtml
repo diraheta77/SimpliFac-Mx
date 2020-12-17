@@ -1,0 +1,566 @@
+﻿@{
+    ViewData["Title"] = "Recibos de Nómina";
+    //ViewData["Header"] = "<i class='fa fa-list-ul'></i> Recibos de Nómina <div class='form control pull-right'>" +
+    //            "<div class='dropdown pull-right'>" +
+    //            "<button class='btn btn-primary dropdown-toggle' type='button' data-toggle='dropdown'>Opciones " +
+    //            "<span class='caret'></span></button>"+
+    //            "<ul class='dropdown-menu'>"+
+    //            "<li><a href='#'>Descargar PDF´s</a></li>"+
+    //            "<li><a href='#'>Descargar Excel´s</a></li>" +
+    //            "</ul></div>";
+    ViewData["Header"] = "<i class='fa fa-list-ul'></i> Recibos de Nómina";
+}
+
+@Html.Modal("viewHtml", ".modalhtmlviewlink", "Recibo de Nomina", "", "Ok", "lg")
+
+<section>
+    <form id="frm-search" class="filter" action="#">
+        <div class="form-group">
+            @Html.DropDownList("filter_estatus", new[]
+          {
+               new SelectListItem(){ Text = "ICF120209CCA", Value = "ICF120209CCA"},
+          }, "Filtrar por RFC Emisor", new { @class = "form-control selectpicker" })
+        </div>
+        <div class="form-group">
+            @Html.DropDownList("filter_estatus", new[]
+           {
+                new SelectListItem(){ Text = "HEMR801218T71", Value = "HEMR801218T71"},
+                new SelectListItem(){ Text = "UTM7502128J2", Value = "UTM7502128J2"},
+           }, "Filtrar por RFC Receptor", new { @class = "form-control selectpicker" })
+        </div>
+        <div class="form-group has-feedback">
+            <input type="text" class="form-control pull-right date" id="filter_fecha_pago" placeholder="Fecha de Pago" autocomplete="off" />
+            <span class="fa fa-calendar form-control-feedback"></span>
+        </div>
+        <div class="form-group has-feedback">
+            <input type="text" class="form-control pull-right date" id="filter_fecha_inicial" placeholder="Fecha Factura (Inicial)" autocomplete="off" />
+            <span class="fa fa-calendar form-control-feedback"></span>
+        </div>
+        <div class="form-group has-feedback">
+            <input type="text" class="form-control pull-right date" id="filter_fecha_final" placeholder="Fecha Factura (Final)" autocomplete="off" />
+            <span class="fa fa-calendar form-control-feedback"></span>
+        </div>
+        <div class="btn-container">
+            <button type="button" class="btn btn-default search">
+                <i class="fa fa-search"></i>
+            </button>
+        </div>
+    </form>
+</section>
+
+<section>
+    <table id="tb-nomina" class="table table-striped table-hover table-responsive dataTable compact stripe text-nowrap" style="width: 100%;" role="grid" aria-describedby="companies_info">
+        <thead>
+            <tr>
+                <th></th>
+                <th></th>
+                <th>UUID</th>
+                <th>RFCEmisor</th>
+                <th>NombreEmisor</th>
+                <th>RFCReceptor</th>
+                <th>NombreReceptor</th>
+                <th>RecepNumEmpleado</th>
+                <th>Fecha de Pago</th>
+                <th>Fecha Periodo Inicial</th>
+                <th>Fecha Periodo Final</th>
+                <th>SubtotalCFDI</th>
+                <th>TotalPercepciones</th>
+                <th>TotalDeducciones</th>
+                <th>TotalCFDI</th>
+                <th>Estatus CFDI</th>
+                <th>Acciones</th>
+                <th>Index</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</section>
+
+<partial name="_ModalDownload"/>
+
+@section Styles{
+    <link rel="stylesheet" href="~/theme/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/datatable-responsive/css/responsive.dataTables.min.css">
+    <style type="text/css">
+        td.details-control {
+            background: url('../images/details_open.png') no-repeat center center;
+            cursor: pointer;
+        }
+
+        tr.shown td.details-control {
+            background: url('../images/details_close.png') no-repeat center center;
+        }
+
+        .oculto {
+            display: none;
+        }
+        li.sub-menu {
+            position: relative;
+        }
+
+            li.sub-menu span.glyphicon {
+                font-size: 0.7em;
+            }
+
+            li.sub-menu:hover .dropdown-menu {
+                display: block;
+                top: 0;
+                left: 100%;
+            }
+    </style>
+    <link href="https://cdn.datatables.net/buttons/1.6.2/css/buttons.dataTables.min.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css" rel="stylesheet" />
+    <link href="https://gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/css/dataTables.checkboxes.css" rel="stylesheet" />
+}
+
+@section Scripts{
+    <script src="~/theme/bower_components/datatables/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.21/cr-1.5.2/datatables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
+    <script src="https://gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/js/dataTables.checkboxes.min.js"></script>
+   
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.colVis.min.js"></script>
+
+    <script src="~/theme/bower_components/moment/min/moment.min.js"></script>
+    <script src="~/theme/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="~/theme/bower_components/bootstrap-datepicker/dist/locales/bootstrap-datepicker.es.min.js"></script>
+    @*<partial name="_ScriptForZip" />*@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.2/FileSaver.min.js"></script>
+
+    <script type="text/javascript">
+        var globaldata = null;
+        var table = null;
+        $(function () {
+
+        table = $("#tb-nomina").DataTable({
+            "processing": true,
+            "serverSide": false,
+            "ordering": true,
+            "searching": true,
+            "lengthChange": true,
+            "colReorder": true,
+            //"pagingType": "simple",
+            "responsive": true,
+            scrollX: true,
+            stateSave: true,
+            select: {
+                style: 'multi',
+                //selector: 'td:first-child'
+            },
+            dom: 'Bfrtip',
+            order: [[2, 'asc']],
+            buttons: [
+                {
+                    extend: 'colvis', text:'Visibilidad Columnas',
+                    columns: [2,3,4,5,6,7,8,9,10,12,12,13,14]
+                },
+                //{
+                //    extend: 'excel', text: 'Descargar Excel',
+                //    action: function () {
+                //        debugger;
+                //        document.getElementById("excelya").click();
+                //    }
+                //},
+                {
+                    extend: 'excelHtml5', text: 'Exportar a Excel',
+                    title: '',
+                    exportOptions: {
+                        columns: [2,3,4,5,6,7,8,9,10,11,12,13,14]
+                    },
+                    customize: function (xlsx) {
+                        var _table = $('#tb-nomina').DataTable();
+                        // Get number of columns to remove last hidden index column.
+                        var numColumns = _table.columns().header().count();
+                        // Get sheet.
+                        var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                        var col = $('col', sheet);
+                        // Set the column width.
+                        $(col[1]).attr('width', 20);
+                        // Get a clone of the sheet data.
+                        var sheetData = $('sheetData', sheet).clone();
+                        // Clear the current sheet data for appending rows.
+                        $('sheetData', sheet).empty();
+                        // Row index from last column.
+                        var DT_row;        // Row count in Excel sheet.
+                        var rowCount = 1;
+                        // Itereate each row in the sheet data.
+                        $(sheetData).children().each(function (index) {
+
+                            // Used for DT row() API to get child data.
+                            var rowIndex = index - 1;
+
+                            // Don't process row if its the header row.
+                            if (index > 0) {
+
+                                // Get row
+                                var row = $(this.outerHTML);
+
+                                // Set the Excel row attr to the current Excel row count.
+                                row.attr('r', rowCount);
+
+                                var colCount = 1;
+
+                                // Iterate each cell in the row to change the rwo number.
+                                row.children().each(function (index) {
+                                    var cell = $(this);
+
+                                    // Set each cell's row value.
+                                    var rc = cell.attr('r');
+                                    rc = rc.replace(/\d+$/, "") + rowCount;
+                                    cell.attr('r', rc);
+
+                                    if (colCount === numColumns) {
+                                        DT_row = cell.text();
+                                        cell.html('');
+                                    }
+
+                                    colCount++;
+                                });
+
+                                // Get the row HTML and append to sheetData.
+                                row = row[0].outerHTML;
+                                $('sheetData', sheet).append(row);
+                                rowCount++;
+
+
+                                // Get the child data - could be any data attached to the row.
+                                var childData = _table.row(DT_row, { search: 'none', order: 'index' }).data().nominaDetalles;
+                                debugger;
+
+                                if (childData.length > 0) {
+                                    //var newrowCount = rowCount
+                                    // Prepare Excel formated row
+                                    headerRow = '<row r="' + rowCount + '" s="2">'
+                                        + '<c t="inlineStr" r="A' + rowCount + '"><is><t></t></is></c>'
+                                        + '<c t="inlineStr" r="B' + rowCount + '" s="2"><is><t>CmNaturaleza</t></is></c>'
+                                        + '<c t="inlineStr" r="C' + rowCount + '" s="2"><is><t>CmTipo</t></is></c>'
+                                        + '<c t="inlineStr" r="D' + rowCount + '" s="2"><is><t>CmClave</t></is></c>'
+                                        + '<c t="inlineStr" r="E' + rowCount + '" s="2"><is><t>CmConcepto</t></is></c>'
+                                        + '<c t="inlineStr" r="F' + rowCount + '" s="2"><is><t>CmImporte</t></is></c>'
+                                        + '</row>';
+
+                                    // Append header row to sheetData.
+                                    $('sheetData', sheet).append(headerRow);
+                                    rowCount++; // Inc excelt row counter.
+                                }
+
+                                // The child data is an array of rows
+                                for (c = 0; c < childData.length; c++) {
+                                    debugger;
+                                    // Get row data.
+                                    child = childData[c];
+
+                                    childRow = '<row r="' + rowCount + '">'
+                                        + '<c t="inlineStr" r="A' + rowCount + '"><is><t>' + '</t></is></c>'
+                                        + '<c t="inlineStr" r="B' + rowCount + '"><is><t>' + child.crnNaturaleza + '</t></is></c>'
+                                        + '<c t="inlineStr" r="C' + rowCount + '"><is><t>' + child.crnTipo + '</t></is></c>'
+                                        + '<c t="inlineStr" r="D' + rowCount + '"><is><t>' + child.crnClave + '</t></is></c>'
+                                        + '<c t="inlineStr" r="E' + rowCount + '"><is><t>' + child.crnConcepto + '</t></is></c>'
+                                        + '<c t="inlineStr" r="F' + rowCount + '"><is><t>' + child.crnImporte + '</t></is></c>'
+                                        + '</row>';
+
+                                    // Append row to sheetData.
+                                    $('sheetData', sheet).append(childRow);
+                                    rowCount++; // Inc excelt row counter.
+
+                                }
+                                // Just append the header row and increment the excel row counter.
+                            } else {
+                                debugger;
+                                var row = $(this.outerHTML);
+
+                                var colCount = 1;
+
+                                // Remove the last header cell.
+                                row.children().each(function (index) {
+                                    var cell = $(this);
+
+                                    if (colCount === numColumns) {
+                                        cell.html('');
+                                    }
+                                    colCount++;
+                                });
+                                row = row[0].outerHTML;
+                                $('sheetData', sheet).append(row);
+                                rowCount++;
+                            }
+                        });
+                    }
+                },
+                //{
+                //    extend: 'excelHtml5', text: 'prueba',
+                //    customizeData: function (data) {
+                //        for (var i = 0; i < data.body.length; i++) {
+                //            debugger;
+                //            var uno = data.body;
+                //            for (var j = 0; j < data.body[i].length; j++) {
+                //                debugger;
+                //                var dos = data.body[i][j];
+                //                data.body[i][j] = '\u200C' + data.body[i][j];
+                //                var tres = data.body[i][j];
+                //                console.log(tres);
+                //            }
+                //        }
+                //    }
+                //},
+                {
+                    text: 'Enviar Seleccion por Correo',
+                    action: function (e, dt, node, config) {
+                        $("#btnmodal").click();
+                    }
+                },
+            ],
+            "language": {
+                "url": "@Url.Content("~/langs/data-table-es.json")"
+            },
+            columns: [
+                {
+                    "orderable": false,
+                    "defaultContent": ''
+                },
+                {
+                    "className": 'details-control',
+                    "orderable": false,
+                    "data": null,
+                    "defaultContent": '',
+                    width: 50
+                },
+                { data: "crnUUID" },
+                { data: "datosCFDI.cfdRFCEmisor" },
+                { data: "datosCFDI.cfdNombreEmisor" },
+                { data: "datosCFDI.cfdRFCReceptor" },
+                { data: "datosCFDI.cfdNombreReceptor" },
+                { data: "crnRecepNumEmpleado"},
+                { data: "crnFechaPago" },
+                { data: "crnFechaInicialPago" },
+                { data: "crnFechaFinalPago" },
+                { data: "datosCFDI.cfdSubtotalCFDI" },
+                { data: "crnTotalPercepciones" },
+                { data: "crnTotalDeducciones" },
+                { data: "datosCFDI.cfdTotalCFDI" },
+                { data: "datosCFDI.cfdiStatus" },
+                {
+                    "orderable": false,
+                    "data": null,
+                    "defaultContent": ''
+                },
+                //columna para ocultar el id del row sin importar filtros o orden.
+                {
+                    data: null,
+                    visible: false,
+                    render: function (data, type, row, meta) {
+                        return meta.row;
+                    }
+                }
+            ],
+            columnDefs: [
+                {
+                    'targets': 0,
+                    'checkboxes': {
+                        'selectRow': true
+                    }
+                },
+                {
+                    "render": function (data, type, row) {
+                        return moment(data).format('DD-MM-YYYY');
+                    },
+                    "targets": [8,9,10]
+                },
+                {
+                    "render": function (data, type, row) {
+                        var _text = "Activo";
+                        if (data === "PENDIENTE") {
+                            _text = "Activo";
+                            return '<span class="label label-success">Activo</span>'
+                        }
+                        return '<span class="label label-danger">Cancelado</span>'
+
+                    },
+                    "targets": [15]
+                },
+                {
+                    render: function (data, type, row) {
+                        //debugger;
+                        var newfile = `
+                <a data-url="@Url.Content("~/")api/nomina/html/${data.crnUUID}" type="button" class="btn btn-default btn-xs btn-update-param modalhtmlviewlink" data-toggle="tooltip" data-placement="left" title="Ver CFDI"><i class="fa fa-eye"></i></a>
+                <a target="_blank" href="@Url.Content("~/")api/nomina/pdf/${data.crnUUID}" type="button" class="btn btn-default btn-xs btn-update-param" data-toggle="tooltip" data-placement="left" title="PDF"><i class="fa fa-file-pdf-o"></i></a>
+                <a target="_blank" href="@Url.Content("~/")api/xml/${data.crnUUID}" type="button" class="btn btn-default btn-xs btn-update-param" data-toggle="tooltip" data-placement="left" title="XML"><i class="fa fa-file-code-o"></i></a>
+`;
+                        return newfile;
+                    },
+                    targets: [16]
+                }
+            ]
+        })
+
+
+            //bloque para hacer las descargas en archivos zip...
+            $("#btnProcesarZip").click(function () {
+                var xml = false;
+                var pdf = false;
+                var uuidlist = [];
+                var urlzip = "";
+                var parametroid = $(this).data("uuid");
+                if ($("#todoxml").is(":checked")) {
+                    xml = true;
+                }
+                if ($("#todopdf").is(":checked")) {
+                    pdf = true;
+                }
+
+                if (xml || pdf) {
+                    var count = table.rows({ selected: true }).count();
+                    var objeto = table.rows({ selected: true });
+                    objeto[0].forEach(function (value) {
+                        var datarow = table.row(value).data();
+                        var uuid = null;
+
+                        if (datarow.hasOwnProperty("crnUUID")) {
+                            uuidlist.push(datarow.crnUUID);
+                        } else if (datarow.hasOwnProperty("cnnUUID")) {
+                            uuidlist.push(datarow.cnnUUID);
+                        } else {
+                            uuidlist.push(datarow.cnnUUID);
+                        }
+                    });
+
+                    if (uuidlist.length > 0) {
+                        debugger;
+                        if (xml == true && pdf == true) {
+                            urlzip = `@Url.Content("~/")api/nomina/zip/${uuidlist}/algo`;
+                        } else if (xml) {
+                            urlzip = `@Url.Content("~/")api/nomina/xml/zip/${uuidlist}/algo`
+                        } else if (pdf) {
+                            urlzip = `@Url.Content("~/")api/nomina/pdf/zip/${uuidlist}/algo`
+                        }
+                        $("#downloadzip").attr("href", urlzip);
+                        document.getElementById("downloadzip").click();
+                    } else {
+                        alert("No hay registros seleccionados");
+                    }
+                } else {
+                    alert("No hay opcion seleccionada");
+                }
+            });
+
+        $('body').on('focus', ".date", function () {
+            $(this).datepicker({
+                endDate: new Date(),
+                language: 'es',
+                autoclose: true,
+                format: 'dd/mm/yyyy'
+            })
+        });
+
+             $(".search").click(function () {
+                var params = {
+                    emisor: $("#filter_emisor option:selected").val(),
+                    receptor: $("#filter_receptor option:selected").val(),
+                    fechap: $("#filter_fecha_pago option:selected").val(),
+                    fechai: $("#filter_fecha_inicial").val(),
+                    fechaf: $("#filter_fecha_final").val()
+                }
+                params.fechai = '2020-08-01';
+                params.fechaf = '2020-08-30';
+                $.get("@Url.Content("~/")api/nomina", params).done(function (result) {
+                globaldata = result;
+                table.clear();
+                table.rows.add(result).draw();
+            })
+            });
+
+            function GetData() {
+                var today = new Date();
+                var datei = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + "01";
+                var datef = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + "31";
+            var params = {
+                    emisor: $("#filter_emisor option:selected").val(),
+                    receptor: $("#filter_receptor option:selected").val(),
+                    fechap: $("#filter_fecha_pago option:selected").val(),
+                    fechai: $("#filter_fecha_inicial").val(),
+                    fechaf: $("#filter_fecha_final").val()
+                }
+                params.fechai = datei;
+                params.fechaf = datef;
+                $.get("@Url.Content("~/")api/nomina", params).done(function (result) {
+                globaldata = result;
+                table.clear();
+                table.rows.add(result).draw();
+            })
+        }
+
+
+        function ParamsForm() {
+            var params = {};
+            return params;
+        }
+
+        GetData();
+
+        $('#tb-nomina tbody').on('click', 'td.details-control', function () {
+            var tr = $(this).closest('tr');
+            var row = table.row(tr);
+
+            if (row.child.isShown()) {
+                // This row is already open - close it
+                row.child.hide();
+                tr.removeClass('shown');
+            }
+            else {
+                // Open this row
+                var _child = format(row.data());
+                row.child(_child).show();
+                tr.addClass('shown');
+            }
+        });
+
+        //funcion que construye un row que se mostrara como hijo del row seleccionado.
+        function format(d) {
+            // `d` es el objeto original datarow
+            debugger;
+            var mytable = "<table class='table table-hover dataTable nowrap stripe row-border order-column' style='width: 50%;'><thead><tr>";
+            mytable += "<th>CmNaturaleza</th>";
+            mytable += "<th>CmTipo</th>";
+            mytable += "<th>CmClave</th>";
+            mytable += "<th>CmConcepto</th>";
+            mytable += "<th>CmImporte</th>";
+            mytable += "</tr>";
+            mytable += "</thead>";
+            mytable += "<tbody>";
+
+            d.nominaDetalles.forEach(function (detalle) {
+                var _texto = "";
+                if (detalle.crnNaturaleza === "D") {
+                    _texto = "Deducción";
+                }
+                if (detalle.crnNaturaleza === "P") {
+                    _texto = "Percepción";
+                }
+                var newRow = `
+                <tr>
+                <td>${_texto}</td>
+                <td>${detalle.crnTipo}</td>
+                <td>${detalle.crnClave}</td>
+                <td>${detalle.crnConcepto}</td>
+                <td>${detalle.crnImporte}</td>
+                </tr>
+                `;
+                mytable += newRow;
+            })
+            mytable += "</tbody></table>";
+            return mytable;
+        }
+
+    });
+    //fin del document ready
+    </script>
+
+    
+}
+

@@ -1,0 +1,372 @@
+﻿@{
+    ViewData["Title"] = "Requisiciones SAT";
+    ViewData["Header"] = "<i class='fa fa-file-text-o'></i> Requisiciones SAT";
+
+}
+
+@Html.Modal("solicitud", ".btn-insert-solicitud", "Nueva Requisición SAT", "fa fa-plus-square", "Continuar", "lg")
+
+<div class="box">
+    <div class="box-header with-border">
+        <div class="box-tools pull-right">
+            <button id="" type="button" data-url="@Url.Action("Insert")" class='btn btn-primary btn-insert-solicitud' data-toggle="tooltip" data-placement="left" title="Solicitud">
+                <i class="fa fa-plus-square"></i> Nueva solicitud
+            </button>
+
+        </div>
+
+    </div>
+    <div class="box-body">
+        <form id="frm-search" class=" filter" action="#">
+            <div class="form-group">
+                @Html.DropDownList("filter_emp_id", ViewBag.Empresas, "Filtrar por empresa", new { @class = "form-control selectpicker" })
+            </div>
+            <div class="form-group">
+                @Html.DropDownList("filter_un_id", ViewBag.Unidades, "Filtrar por unidad", new { @class = "form-control dl_unidades" })
+            </div>
+            <div class="form-group">
+                @Html.DropDownList("filter_estatus", new[]
+               {
+                    new SelectListItem(){ Text = "Registrada", Value = "0"},
+                    new SelectListItem(){ Text = "Aceptada", Value = "1"},
+                    new SelectListItem(){ Text = "En proceso", Value = "2"},
+                    new SelectListItem(){ Text = "Terminada", Value = "3"},
+                    new SelectListItem(){ Text = "Error", Value = "4"},
+                    new SelectListItem(){ Text = "Rechazada", Value = "5"},
+                    new SelectListItem(){ Text = "Vencida", Value = "6"}
+               }, "Filtrar por estatus", new { @class = "form-control selectpicker" })
+            </div>
+            <div class="form-group">
+                @Html.DropDownList("filter_origen", new[]
+               {
+                    new SelectListItem(){ Text = "Manual", Value = "M"},
+                    new SelectListItem(){ Text = "Automática", Value = "A"}
+               }, "Filtrar por origen", new { @class = "form-control selectpicker" })
+            </div>
+            <div class="form-group has-feedback">
+                <input type="text" class="form-control pull-right date" id="filter_fecha_inicial" placeholder="Fecha inicial" autocomplete="off" />
+                <span class="fa fa-calendar form-control-feedback"></span>
+            </div>
+            <div class="form-group has-feedback">
+                <input type="text" class="form-control pull-right date" id="filter_fecha_final" placeholder="Fecha final" autocomplete="off" />
+                <span class="fa fa-calendar form-control-feedback"></span>
+            </div>
+            @*<div class="form-group has-feedback">
+                <input type="text" class="form-control pull-right date" id="filter_fecha_creacion" placeholder="Fecha creación" autocomplete="off" />
+                <span class="fa fa-calendar form-control-feedback"></span>
+            </div>*@
+            <div class="btn-container">
+                <button type="button" class="btn btn-default search">
+                    <i class="fa fa-search"></i>
+                </button>
+                @*<button type="button" class="btn btn-default reaload-table ">
+                    <i class="fa fa-refresh"></i>
+                </button>*@
+            </div>
+
+
+        </form>
+        <table id="companies" class="table table-striped table-hover table-responsive dataTable compact stripe text-nowrap" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Rfc</th>
+                    <th>Fecha creación</th>
+                    <th>Fecha inicial solicitud</th>
+                    <th>Fecha final solicitud</th>
+                    <th>Origen</th>
+                    <th>Cantidad CFDI</th>
+                    <th>Estatus solicitud</th>
+                    <th>Estatus descarga</th>
+                    <th>Id Solicitud</th>
+                    <th>Tipo Solicitante</th>
+                    <th>Tipo Comprobante</th>
+                    <th class="all"></th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <!-- /.box-body -->
+    <div class="box-footer">
+
+    </div>
+    <!-- /.box-footer-->
+</div>
+<!-- /.box -->
+
+
+
+
+@section Styles{
+    <link rel="stylesheet" href="~/theme/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+    <partial name="_DatatableStyles" />
+}
+
+@section Scripts{
+    <partial name="_DatatableScripts" />
+    <script src="~/theme/bower_components/moment/min/moment.min.js"></script>
+    <script src="~/theme/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="~/theme/bower_components/bootstrap-datepicker/dist/locales/bootstrap-datepicker.es.min.js"></script>
+
+    <script type="text/javascript">
+        //$("#FiguraUnidadNegocio").val("EMISOR");
+        function setValor(e) {
+            var value = $(e).val();
+            $("#FiguraUnidadNegocio").val(value);
+        }
+
+
+        function addValor(e) {
+            debugger;
+            var oldvalue = $("#TipoCFDI").val();
+            var value = "";
+            if ($(e).is(":checked")) {
+                value = $(e).val();
+                if (oldvalue == "") {
+                    value = value + ",";
+                }
+                oldvalue += value;
+                $("#TipoCFDI").val(oldvalue);
+            } else {
+                value = $(e).val();
+                value = value + ",";
+                oldvalue.replace(value, "");
+                $("#TipoCFDI").val(oldvalue);
+            }
+        }
+
+        $(function () {
+            //formulario insert eventos
+            $('input[type=radio][name=radio1]').change(function () {
+                debugger;
+                var value = $(this).val();
+                $("#FiguraUnidadNegocio").val(value);
+            });
+                    var reorder = [];
+                    var table = $('#companies').DataTable({
+                        "processing": true,
+                        "serverSide": false,
+                        "ordering": true,
+                        "searching": true,
+                        "lengthChange": true,
+                        "colReorder": true,
+                        //"pagingType": "simple",
+                        "responsive": true,
+                        scrollX: true,
+                        stateSave: true,
+                        "language": {
+                            "url": "@Url.Content("~/langs/data-table-es.json")"
+                        },
+                        "columns": [
+                            { "data": "rsRFCRequisicion" },
+                            { "data": "rsFechaRequisicion" },
+                            { "data": "rsFechaInfoInicio" },
+                            { "data": "rsFechaInfoFinal" },
+                            { "data": "rsOrigenCodigo" },
+                            { "data": "rsNumCFDI" },
+                            { "data": "rsEstatusRequisicion" },
+                            { "data": "rsEstatusDescarga" },
+                            { "data": "rsIdRequisicionSAT" },
+                            { "data": "rsTipoSolicitante" },
+                            { "data": "rsTipoComprobante" },
+                            { "data": "rsId" }
+                        ],
+                        "columnDefs": [
+                            {
+                                "render": function (data, type, row) {
+                                    return '<b>' + data + '</b>';
+                                },
+                                "targets": 0
+                            },
+                            {
+                                "render": function (data, type, row) {
+                                    return moment(data).format('DD-MM-YYYY');
+                                },
+                                "targets": [1,2,3]
+                            },
+                            {
+                                "render": function (data, type, row) {
+                                    if (data == 'M')
+                                        return 'Manual';
+                                    return 'Automática';
+                                },
+                                "targets": [4]
+                            },
+                            {
+                                "render": function (data, type, row) {
+                                    console.log(data);
+                                    switch (data) {
+                                        case '1':
+                                            return '<b>Aceptada</b>';
+                                        case '2':
+                                            return '<b>En proceso</b>';
+                                        case '3':
+                                            return '<b>Terminada</b>';
+                                        case '4':
+                                            return '<b>Error</b>';
+                                        case '5':
+                                            return '<b>Rechazada</b>';
+                                        case '6':
+                                            return '<b>Vencida</b>';
+                                    }
+                                    return '<b>Registrada</b>';
+                                },
+                                "targets": 6
+                            },
+                            {
+                                "render": function (data, type, row) {
+                                    switch (data) {
+                                        case 'U':
+                                            return '<b>Descargada</b>';
+                                        case 'H':
+                                            return '<b>En espera</b>';
+                                    }
+                                    return '';
+                                },
+                                "targets": 7
+                            },
+                            {
+                                "render": function (data, type, row) {
+                                    return '<b>' + (data != null ? data.empRazonSocial : 'Sin definir') + '</b>';
+                                },
+                                "targets": 1
+                            },
+                            {
+                                "render": function (data, type, row) {
+                                    if (data != null) {
+                                        debugger;
+                                        var str = data;
+                                        var arr = str.split(",");
+                                        var texto = "";
+                                        if (arr.includes("I")) {
+                                            texto = texto + "Ingreso ";
+                                        }
+                                        if (arr.includes("E")) {
+                                            texto = texto + "Egreso ";
+                                        }
+                                        if (arr.includes("P")) {
+                                            texto = texto + "Complemento de Pago ";
+                                        }
+                                        if (arr.includes("N")) {
+                                            texto = texto + "Recibo de Nomina";
+                                        }
+                                        //texto = texto.replace("-", ",");
+                                        return texto;
+                                    } else {
+                                        return "N/A";
+                                    }
+                                },
+                                "targets": 10
+                            },
+                            {
+                                "render": function (data, type, row) {
+                                    if (row.rsEstatusDescarga == 'U') {
+                                        return `
+                                        <div class="text-right">
+                                            <a href="@Url.Content("~/")requisiciones/descargar/${row.rsId}" type='button' class='btn btn-default btn-sm btn-update-param' data-toggle="tooltip" data-placement="left" title="Descargar"><i class="fa fa-download"></i>Descargar</a>
+                                        </div>
+                                    `;
+                                    }
+                                    return '<div></div>';
+                                },
+                                "targets": 11
+                            }
+                        ],
+                        dom: 'Bfrtip',
+                        order: [[1, 'asc']],
+                        buttons: [
+                            {
+                                extend: 'colvis', text: 'Visibilidad Columnas',
+                                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                            },
+                            {
+                                extend: 'excel', text: 'Exportar a Excel',
+                                exportOptions: {
+                                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                                }
+                            },
+                        ]
+                    });
+
+                    //carga todo
+                    $.get("@Url.Content("~/")api/requisiciones").done(function (result) {
+                    console.log(result);
+                    table.clear();
+                    table.rows.add(result).draw();
+                        //FillDropDowns(result);
+                    });
+
+                    $(".reaload-table").click(function () {
+                    $("#reset-form").click();
+                        $.get("@Url.Content("~/")api/requisiciones").done(function (result) {
+                        console.log(result);
+                        table.clear();
+                        table.rows.add(result).draw();
+                        //FillDropDowns(result);
+                        });
+                    });
+
+                    //carga segun busqueda
+                    $(".search").click(function () {
+                    var params = {
+                        fempid: $("#filter_emp_id option:selected").val(),
+                        funid: $("#filter_un_id option:selected").val(),
+                        festatus: $("#filter_estatus option:selected").val(),
+                        forigen: $("#filter_origen option:selected").val(),
+                        ffechai: $("#filter_fecha_inicial").val(),
+                        ffechaf: $("#filter_fecha_final").val()
+                    }
+
+                        $.get("@Url.Content("~/")api/requisiciones", params).done(function (result) {
+                        console.log(result);
+                        table.clear();
+                        table.rows.add(result).draw();
+                        FillDropDowns(result);
+                            });
+                    });
+
+
+                    
+
+                    $('#frm-search').submit(function (e) {
+                        e.preventDefault();
+                        table.draw();
+                    });
+
+
+                    $('body').on('focus', ".date", function () {
+                        $(this).datepicker({
+                            endDate: new Date(),
+                            language: 'es',
+                            autoclose: true,
+                            format: 'dd/mm/yyyy'
+                        })
+                    });
+
+            $(document).on('change', '#filter_emp_id', function () {
+                debugger;
+                        var th = $(this);
+                var unidades = $('#filter_un_id');
+                        unidades.find('option').not(':first').remove();
+
+                        $.get('@Url.Content("~/")api/solicitudes/unidades', { empresa: th.val() }).done(function (resp) {
+                            var data = resp.unidades;
+                            for (var i = 0; i < data.length; i++) {
+                                unidades.append($('<option>', {
+                                    value: data[i].unId,
+                                    text: data[i].unRazonSocial
+                                }));
+                            }
+                        });
+                    });
+                    $('.dl_empresas').change(function () {
+
+                    });
+                });
+
+    </script>
+}
+
+
+
+
+

@@ -1,0 +1,173 @@
+﻿@{
+    ViewData["Title"] = "Administrar parámetros master";
+    ViewData["Header"] = "<i class='fa fa-gear'></i> Administrar parámetros master";
+
+}
+
+@Html.Modal("insert-param", ".btn-insert-param", "Crear nuevo parámetro", "fa fa-plus-square", "Guardar datos", "lg")
+@Html.Modal("update-param", ".btn-update-param", "Modificar parámetro", "fa fa-edit", "Guardar datos", "lg")
+@Html.Modal("delete-param", ".btn-delete-param", "Eliminar parámetro", "fa fa-trash", "Continuar", "sm")
+<!-- Default box -->
+<div class="box">
+    <div class="box-header with-border">
+        <div class="box-tools pull-right">
+            <button id="" type="button" data-url="@Url.Action("Insert")" class='btn btn-primary btn-insert-param' data-toggle="tooltip" data-placement="left" title="Insertar">
+                <i class="fa fa-plus-square"></i>
+                Crear nueva parámetro
+            </button>
+        </div>
+
+    </div>
+    <div class="box-body">
+        <form id="frm-search" class="filter" action="#">
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Id parámetro" id="filter_parm_id">
+            </div>
+
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Descripción" id="filter_parm_desc">
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Valor" id="filter_parm_val">
+            </div>
+            <div class="btn-container">
+                <button type="submit" class="btn btn-default ">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+        </form>
+        <table id="companies" class="display" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Id parámetro</th>
+                    <th>Descripción</th>
+                    <th>Valor texto</th>
+                    <th>Valor numérico</th>
+                    <th class="all"></th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <!-- /.box-body -->
+    <div class="box-footer">
+
+    </div>
+    <!-- /.box-footer-->
+</div>
+<!-- /.box -->
+
+
+@section Styles{
+    <link rel="stylesheet" href="~/theme/bower_components/datatables/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="~/lib/datatable-responsive/css/responsive.dataTables.min.css">
+}
+
+@section Scripts{
+
+    <script src="~/theme/bower_components/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="~/theme/bower_components/datatables-bs/js/dataTables.bootstrap.min.js"></script>
+    <script src="~/lib/datatable-responsive/js/dataTables.responsive.min.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            var table = $('#companies').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "ordering": false,
+                "searching": false,
+                "lengthChange": true,
+                "pagingType": "simple",
+                "responsive": true,
+                "language": {
+                    "url": "@Url.Content("~/langs/data-table-es.json")"
+                },
+                "ajax":
+                {
+                    "url": "@Url.Content("~/")api/master-parametros",
+                    "data": function (d) {
+                        var page = 1;
+                        var length = d.length;
+                        if (d.start % d.length == 0) {
+                            page = (d.start / d.length) + 1;
+                        } else {
+                            page = (d.start / d.length);
+                        }
+                        d = {};
+                        d.page = page;
+                        d.length = length;
+
+                        d.fparmid = $('#filter_parm_id').val();
+                        d.fparmempid = $('#filter_emp_id').val();
+                        d.fparmdesc = $('#filter_parm_desc').val();
+                        d.fparmval = $('#filter_parm_val').val();
+
+                        return d;
+                    }
+                },
+                "columns": [
+                    { "data": "mParmId" },
+                    { "data": "mParmDesc" },
+                    { "data": "mParmValTxt" },
+                    { "data": "mParmValNum" },
+                    { "data": "" }
+                ],
+                "columnDefs": [
+                    {
+                        // The `data` parameter refers to the data for the cell (defined by the
+                        // `data` option, which defaults to the column being worked with, in
+                        // this case `data: 0`.
+                        "render": function (data, type, row) {
+                            return '<b>' + data + '</b>';
+                        },
+                        "targets": 0
+                    },
+                    {
+                        "render": function (data, type, row) {
+                            return `
+                                               <div class="text-right">
+                                                    <button id="" type='button' data-url='@Url.Content("~/")masterparametros/update/`+ row.mParmId + `' class='btn btn-default btn-sm btn-update-param' data-toggle="tooltip" data-placement="left" title="Modificar"><i class="fa fa-edit"></i></button>
+                                                    <button id="" type='button' data-url='@Url.Content("~/")masterparametros/delete/`+ row.mParmId+ `'  class='btn btn-default btn-sm btn-delete-param' data-toggle="tooltip" data-placement="left" title="Eliminar"><i class="fa fa-trash-o"></i></button>
+                                                </div>
+                                            `;
+                        },
+                        "targets": 4
+                    }
+                ]
+            });
+
+            $('#frm-search').submit(function (e) {
+                e.preventDefault();
+                table.draw();
+            });
+
+            $(document).on('change', 'input[name="Tipo"]', function () {
+                $('#update-param #MParmValTxt').parent().hide();
+                $('#update-param #MParmValNum').parent().hide();
+                $('#update-param #MParmBool').parent().hide();
+
+                $('#insert-param #MParmValTxt').parent().hide();
+                $('#insert-param #MParmValNum').parent().hide();
+                $('#insert-param #MParmBool').parent().hide();
+
+                switch ($(this).val()) {
+                    case "0":
+                        $('#update-param #MParmValTxt').parent().show();
+                        $('#insert-param #MParmValTxt').parent().show();
+                        break;
+                    case "1":
+                        $('#update-param #MParmValNum').parent().show();
+                        $('#insert-param #MParmValNum').parent().show();
+                        break;
+                    case "2":
+                        $('#update-param #MParmBool').parent().show();
+                        $('#insert-param #MParmBool').parent().show();
+                        break;
+                }
+
+            });
+        });
+
+    </script>
+}
+
+

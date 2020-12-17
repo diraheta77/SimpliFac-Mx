@@ -1,0 +1,430 @@
+﻿@{
+    ViewData["Title"] = "Conciliación de Pagos";
+    ViewData["Header"] = "<i class='fa fa-dollar (alias)'></i> Conciliación de Pagos";
+
+}
+
+@Html.Modal("viewHtml", ".modalhtmlviewlink", "Pagos", "", "OK", "lg", false)
+
+<div class="box">
+    @*<div class="box-header with-border">
+            <div class="box-tools pull-right">
+                <a class='btn btn-primary btn-insert-solicitud' href="~/images/Reporte_CFDI.xlsx">
+                    <i class="fa fa-file-excel-o"></i>
+                    Descargar Datos
+                </a>
+            </div>
+        </div>*@
+    <div class="box-body">
+        <form id="frm-search" class=" filter" action="#">
+            <div class="form-group">
+                @Html.DropDownList("filter_estatus", new[]
+              {
+                   new SelectListItem(){ Text = "FOCG681108QQ4", Value = "0"},
+                   new SelectListItem(){ Text = "GRS061012MQ4", Value = "2"},
+                   new SelectListItem(){ Text = "LMC741212JN6", Value = "1"}
+              }, "Filtrar por RFC Emisor", new { @class = "form-control selectpicker" })
+            </div>
+            <div class="form-group">
+                @Html.DropDownList("filter_receptor", new[]
+               {
+                    new SelectListItem(){ Text = "SSE951221AX0", Value = "SSE951221AX0"}
+               }, "Filtrar por RFC Receptor", new { @class = "form-control selectpicker" })
+            </div>
+            <div class="form-group">
+                @Html.DropDownList("filter_estatus", new[]
+               {
+                    new SelectListItem(){ Text = "0%", Value = "0"},
+                    new SelectListItem(){ Text = "<=50%", Value = "1"},
+                    new SelectListItem(){ Text = ">=50%", Value = "2"},
+                    new SelectListItem(){ Text = "100%", Value = "2"}
+               }, "Filtrar por Estatus Conciliación", new { @class = "form-control selectpicker" })
+            </div>
+            <div class="form-group has-feedback">
+                <input type="text" class="form-control pull-right date" id="filter_fecha_inicial" placeholder="Fecha Factura (Inicial)" autocomplete="off" />
+                <span class="fa fa-calendar form-control-feedback"></span>
+            </div>
+            <div class="form-group has-feedback">
+                <input type="text" class="form-control pull-right date" id="filter_fecha_final" placeholder="Fecha Factura (Final)" autocomplete="off" />
+                <span class="fa fa-calendar form-control-feedback"></span>
+            </div>
+            <div class="btn-container">
+                <button type="submit" class="btn btn-default ">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+
+        </form>
+        <table id="tb-confacturas" class="table table-striped table-hover table-responsive dataTable compact stripe text-nowrap" style="width: 100%;" role="grid" aria-describedby="companies_info">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>RFC Emisor</th>
+                    <th>Fecha Factura</th>
+                    <th>UUID</th>
+                    <th>Serie</th>
+                    <th>Folio</th>
+                    <th>IVA ($)</th>
+                    <th>Retención ($)</th>
+                    <th>Subtotal</th>
+                    <th>Total</th>
+                    <th>Existe</th>
+                    <th>Estatus CFDI</th>
+                    <th>Estatus Conciliación</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <!-- /.box-body -->
+    <div class="box-footer">
+
+    </div>
+    <!-- /.box-footer-->
+</div>
+<!-- /.box -->
+
+<partial name="_ModalDownload" />
+
+
+
+@section Styles{
+    <link rel="stylesheet" href="~/theme/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+    <partial name="_DatatableStyles" />
+}
+
+@section Scripts{
+    <partial name="_DatatableScripts" />
+
+    <script src="~/theme/bower_components/moment/min/moment.min.js"></script>
+    <script src="~/theme/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="~/theme/bower_components/bootstrap-datepicker/dist/locales/bootstrap-datepicker.es.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.2/FileSaver.min.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+
+            $('body').on('focus', ".date", function () {
+                $(this).datepicker({
+                    endDate: new Date(),
+                    language: 'es',
+                    autoclose: true,
+                    format: 'dd/mm/yyyy'
+                })
+            });
+
+            var table = $("#tb-confacturas").DataTable({
+                 "processing": true,
+            "serverSide": false,
+            "ordering": true,
+            "searching": true,
+            "lengthChange": true,
+            "colReorder": true,
+            //"pagingType": "simple",
+            "responsive": true,
+            scrollX: true,
+            order: [[1, 'asc']],
+            stateSave: true,
+            "language": {
+                "url": "@Url.Content("~/langs/data-table-es.json")"
+            },
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'colvis', text: 'Visibilidad Columnas',
+                        //columns: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+                    },
+                    {
+                        extend: 'excelHtml5', text: 'Exportar a Excel',
+                        title: '',
+                        exportOptions: {
+                            columns: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+                        },
+                        customize: function (xlsx) {
+                            var _table = $('#tb-confacturas').DataTable();
+                            // Get number of columns to remove last hidden index column.
+                            var numColumns = _table.columns().header().count();
+                            // Get sheet.
+                            var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                            var col = $('col', sheet);
+                            // Set the column width.
+                            $(col[1]).attr('width', 20);
+                            // Get a clone of the sheet data.
+                            var sheetData = $('sheetData', sheet).clone();
+                            // Clear the current sheet data for appending rows.
+                            $('sheetData', sheet).empty();
+                            // Row index from last column.
+                            var DT_row;        // Row count in Excel sheet.
+                            var rowCount = 1;
+                            // Itereate each row in the sheet data.
+                            $(sheetData).children().each(function (index) {
+
+                                // Used for DT row() API to get child data.
+                                var rowIndex = index - 1;
+
+                                // Don't process row if its the header row.
+                                if (index > 0) {
+
+                                    // Get row
+                                    var row = $(this.outerHTML);
+
+                                    // Set the Excel row attr to the current Excel row count.
+                                    row.attr('r', rowCount);
+
+                                    var colCount = 1;
+
+                                    // Iterate each cell in the row to change the rwo number.
+                                    row.children().each(function (index) {
+                                        var cell = $(this);
+
+                                        // Set each cell's row value.
+                                        var rc = cell.attr('r');
+                                        rc = rc.replace(/\d+$/, "") + rowCount;
+                                        cell.attr('r', rc);
+
+                                        if (colCount === numColumns) {
+                                            DT_row = cell.text();
+                                            cell.html('');
+                                        }
+
+                                        colCount++;
+                                    });
+
+                                    // Get the row HTML and append to sheetData.
+                                    row = row[0].outerHTML;
+                                    $('sheetData', sheet).append(row);
+                                    rowCount++;
+
+                                    // Get the child data - could be any data attached to the row.
+                                    var childData = _table.row(DT_row, { search: 'none', order: 'index' }).data().detalle;
+
+                                    if (childData.length > 0) {
+                                        //var newrowCount = rowCount
+                                        // Prepare Excel formated row
+                                        headerRow = '<row r="' + rowCount + '" s="2">'
+                                            + '<c t="inlineStr" r="A' + rowCount + '"><is><t></t></is></c>'
+                                            + '<c t="inlineStr" r="B' + rowCount + '" s="2"><is><t>RFC Emisor</t></is></c>'
+                                            + '<c t="inlineStr" r="C' + rowCount + '" s="2"><is><t>Fecha CRP</t></is></c>'
+                                            + '<c t="inlineStr" r="D' + rowCount + '" s="2"><is><t>UUID CRP</t></is></c>'
+                                            + '<c t="inlineStr" r="E' + rowCount + '" s="2"><is><t>Total</t></is></c>'
+                                            + '<c t="inlineStr" r="F' + rowCount + '" s="2"><is><t>Estatus CRP</t></is></c>'
+                                            + '</row>';
+
+                                        // Append header row to sheetData.
+                                        $('sheetData', sheet).append(headerRow);
+                                        rowCount++; // Inc excelt row counter.
+                                    }
+
+                                    // The child data is an array of rows
+                                    for (c = 0; c < childData.length; c++) {
+                                        debugger;
+                                        // Get row data.
+                                        child = childData[c];
+                                        var _fec = moment(child.crpFecha).format('DD-MM-YYYY');
+                                        childRow = '<row r="' + rowCount + '">'
+                                            + '<c t="inlineStr" r="A' + rowCount + '"><is><t>' + '</t></is></c>'
+                                            + '<c t="inlineStr" r="B' + rowCount + '"><is><t>' + child.rfcEmisor + '</t></is></c>'
+                                            + '<c t="inlineStr" r="C' + rowCount + '"><is><t>' + _fec + '</t></is></c>'
+                                            + '<c t="inlineStr" r="D' + rowCount + '"><is><t>' + child.crpUUID + '</t></is></c>'
+                                            + '<c t="inlineStr" r="E' + rowCount + '"><is><t>' + child.crpImpPagado + '</t></is></c>'
+                                            + '<c t="inlineStr" r="F' + rowCount + '"><is><t>' + child.status + '</t></is></c>'
+                                            + '</row>';
+
+                                        // Append row to sheetData.
+                                        $('sheetData', sheet).append(childRow);
+                                        rowCount++; // Inc excelt row counter.
+
+                                    }
+                                    // Just append the header row and increment the excel row counter.
+                                } else {
+                                    debugger;
+                                    var row = $(this.outerHTML);
+
+                                    var colCount = 1;
+
+                                    // Remove the last header cell.
+                                    row.children().each(function (index) {
+                                        var cell = $(this);
+
+                                        if (colCount === numColumns) {
+                                            cell.html('');
+                                        }
+                                        colCount++;
+                                    });
+                                    row = row[0].outerHTML;
+                                    $('sheetData', sheet).append(row);
+                                    rowCount++;
+                                }
+                            });
+                        }
+                    },
+                    //{
+                    //    text: 'Enviar Seleccion por Correo',
+                    //    action: function (e, dt, node, config) {
+                    //        $("#btnmodal").click();
+                    //    }
+                    //}
+                ],
+                columns: [
+                    {
+                        "className": 'details-control',
+                        "orderable": false,
+                        "data": null,
+                        "defaultContent": '',
+                        width: 50
+                    },
+                    { data: "cfdRFCEmisor" },
+                    { data: "cfdFechaEmision" },
+                    { data: "cfdUUID" },
+                    { data: "cfdSerie" },
+                    { data: "cfdFolio" },
+                    { data: "cfdTotalImpuestosTrasladados" },
+                    { data: "cfdTotalImpuestosRetenidos" },
+                    { data: "cfdSubtotalCFDI" },
+                    { data: "cfdTotalCFDI" },
+                    {
+                        data: "existe",
+                    },
+                    {
+                        data: null,
+                        defaultContent: '<span class="label label-success">Activo</span>'
+                    },
+                    {
+                        "orderable": false,
+                        "defaultContent": ''
+                    },
+                    {
+                        "orderable": false,
+                        "defaultContent": ''
+                    },
+                ],
+                columnDefs: [
+                    {
+                        "render": function (data, type, row) {
+                            return moment(data).format('DD-MM-YYYY');
+                        },
+                        "targets": [2]
+                    },
+                    {
+                        "render": function (data, type, row) {
+                            var span = calcularStatus(row.detalle, row.cfdTotalCFDI);
+                            return span;
+                        },
+                        "targets": [12]
+                    },
+                    {
+                    render: function (data, type, row) {
+                        var newfile = `
+                <a data-url="@Url.Content("~/")api/cfdi/html/${row.cfdUUID}" type="button" class="btn btn-default btn-xs btn-update-param modalhtmlviewlink" data-toggle="tooltip" data-placement="left" title="Ver CFDI"><i class="fa fa-eye"></i></a>
+                <a target="_blank" href="@Url.Content("~/")api/cfdi/pdf/${row.cfdUUID}" type="button" class="btn btn-default btn-xs btn-update-param" data-toggle="tooltip" data-placement="left" title="PDF"><i class="fa fa-file-pdf-o"></i></a>
+                <a target="_blank" href="@Url.Content("~/")api/xml/${row.cfdUUID}" type="button" class="btn btn-default btn-xs btn-update-param" data-toggle="tooltip" data-placement="left" title="XML"><i class="fa fa-file-code-o"></i></a>
+                        `;
+                        return newfile;
+                    },
+                    targets: [13]
+                }
+                ]
+            });
+
+            $.get("@Url.Content("~/")api/cfdi/confacturas").done(function (result) {
+            console.log(result);
+            table.clear();
+            table.rows.add(result).draw();
+            });
+
+
+            $('#tb-confacturas tbody').on('click', 'td.details-control', function () {
+                var tr = $(this).closest('tr');
+                var row = table.row(tr);
+
+                if (row.child.isShown()) {
+                    // This row is already open - close it
+                    row.child.hide();
+                    tr.removeClass('shown');
+                }
+                else {
+                    // Open this row
+                    var _child = format(row.data());
+                    row.child(_child).show();
+                    tr.addClass('shown');
+                }
+            });
+
+            //funcion que construye un row que se mostrara como hijo del row seleccionado.
+            function format(d) {
+                debugger;
+                // `d` es el objeto original datarow
+                debugger;
+                var mytable = "<table class='table table-hover dataTable nowrap stripe row-border order-column' style='width: 50%;'><thead><tr>";
+                mytable += "<th>RFC Emisor</th>";
+                mytable += "<th>Fecha CRP</th>";
+                mytable += "<th>UUID CRP</th>";
+                mytable += "<th>Total</th>";
+                mytable += "<th>Estatus CRP</th>";
+                mytable += "<th>Acciones</th>";
+                mytable += "</tr>";
+                mytable += "</thead>";
+                mytable += "<tbody>";
+
+                d.detalle.forEach(function (detalle) {
+                    var _fec = moment(detalle.crpFecha).format('DD-MM-YYYY');
+                    var botones = `
+                <a data-url="@Url.Content("~/")api/cfdi/html/${detalle.crpIdDocumento}" type="button" class="btn btn-default btn-xs btn-update-param modalhtmlviewlink" data-toggle="tooltip" data-placement="left" title="Ver CFDI"><i class="fa fa-eye"></i></a>
+                <a target="_blank" href="@Url.Content("~/")api/cfdi/pdf/${detalle.crpIdDocumento}" type="button" class="btn btn-default btn-xs btn-update-param" data-toggle="tooltip" data-placement="left" title="PDF"><i class="fa fa-file-pdf-o"></i></a>
+                <a target="_blank" href="@Url.Content("~/")api/xml/${detalle.crpIdDocumento}" type="button" class="btn btn-default btn-xs btn-update-param" data-toggle="tooltip" data-placement="left" title="XML"><i class="fa fa-file-code-o"></i></a>
+                `;
+
+                    var newRow = `
+                <tr>
+                <td>${detalle.rfcEmisor}</td>
+                <td>${_fec}</td>
+                <td>${detalle.crpUUID}</td>
+                <td>${detalle.crpImpPagado}</td>
+                <td>${detalle.status}</td>
+                <td>${botones}</td>
+                </tr>
+                `;
+                    mytable += newRow;
+                })
+                mytable += "</tbody></table>";
+                return mytable;
+            }
+
+
+            function calcularStatus(detalle, total) {
+                debugger;
+                var style = "bg-yellow";
+                var sumatoria = parseFloat(0.0);
+                detalle.forEach(function (dato) {
+                    sumatoria += parseFloat(dato.crpImpPagado);
+                    //console.log(dato);
+                });
+                if (sumatoria > 0) {
+                    var porcentaje = parseFloat(parseFloat(sumatoria) / parseFloat(total)) * parseFloat(100);
+                } else {
+                    var porcentaje = parseFloat(0.0);
+                }
+                
+                porcentaje = porcentaje.toFixed(2);
+
+                if (sumatoria <= 0) {
+                    style = "bg-red";
+                } else if (sumatoria > 0 && porcentaje < 100) {
+                    style = "bg-yellow";
+                } else if (sumatoria > 0 && porcentaje == 100) {
+                    style = "bg-green";
+                }
+
+                var span = `
+                <span class="badge bg-gray">${sumatoria} <span class="badge ${style}">${porcentaje}%</span></span>
+                `;
+                return span;
+            }
+
+        });
+
+    </script>
+}

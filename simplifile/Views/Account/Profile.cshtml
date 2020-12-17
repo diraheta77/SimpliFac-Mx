@@ -1,0 +1,93 @@
+﻿
+@model simplifile.ViewModels.Account.ProfileViewModel
+@{
+    ViewData["Title"] = "Perfil de usuario";
+    ViewData["Header"] = "<i class='fa fa-user'></i> Perfil de usuario";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.Modal("password", ".btn-password", "Cambiar contraseña", "fa fa-lock", "Cambiar contraseña", "sm")
+
+<div class="box">
+    <div class="box-header with-border">
+        <div class="box-tools pull-right">
+            <button id="" type="button" data-url="@Url.Action("Password")" class='btn btn-primary btn-password' data-toggle="tooltip" data-placement="left" title="Cambiar contreaseña">
+                <i class="fa fa-lock"></i>
+                Cambiar contraseña
+            </button>
+        </div>
+
+    </div>
+    <div class="box-body">
+        <form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post">
+
+            <div class="form-group has-feedback">
+                <label asp-for="UsuCorreo"></label>
+                <input asp-for="UsuCorreo" type="email" class="form-control" placeholder="Email" readonly />
+                <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                <span asp-validation-for="UsuCorreo" class="text-danger"></span>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <label>Nombre</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 pr-1">
+                    <div class="form-group has-feedback">
+                        <input asp-for="UsuNombre1" type="text" class="form-control" placeholder="Primer nombre" />
+                        <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                        <span asp-validation-for="UsuNombre1" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-sm-6 pl-1">
+                    <div class="form-group has-feedback">
+                        <input asp-for="UsuNombre2" type="text" class="form-control" placeholder="Segundo nombre" />
+                        <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                        <span asp-validation-for="UsuNombre2" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <label>Apellidos</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 pr-1">
+                    <div class="form-group has-feedback">
+                        <input asp-for="UsuPaterno" type="text" class="form-control" placeholder="Apellido paterno" />
+                        <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                        <span asp-validation-for="UsuPaterno" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-sm-6 pl-1">
+                    <div class="form-group has-feedback">
+                        <input asp-for="UsuMaterno" type="text" class="form-control" placeholder="Apellido materno" />
+                        <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                        <span asp-validation-for="UsuMaterno" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group has-feedback">
+                <label asp-for="UsuTelefono"></label>
+                <input asp-for="UsuTelefono" type="text" class="form-control" placeholder="Teléfono" />
+                <span class="fa fa-phone form-control-feedback"></span>
+                <span asp-validation-for="UsuTelefono" class="text-danger"></span>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12 text-right">
+                    <button type="submit" class="btn btn-primary btn-flat">
+                        Actualizar
+                        <i class="fa fa-check-square-o"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+

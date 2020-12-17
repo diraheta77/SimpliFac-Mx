@@ -1,0 +1,9 @@
+﻿
+@model simplifile.ViewModels.Usuario.UsuarioEliminarViewModel
+<!-- Modal -->
+<div class="modal-body">
+    <form asp-action="Delete">
+        <h3>¿Esta seguro que desea eliminar el usuario @Model.UsuCorreo?</h3>
+        <input asp-for="UsuId" type="hidden" class="form-control" />
+    </form>
+</div>

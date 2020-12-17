@@ -1,0 +1,59 @@
+﻿
+@model simplifile.ViewModels.Account.RecoverPasswordViewModel
+@{
+    ViewData["Title"] = "Restablecer contraseña";
+    Html.AddCssBody("login-page");
+    Layout = "~/Views/Shared/_Auth.cshtml";
+}
+<div class="login-box">
+    <div class="login-logo">
+        <img src="~/images/logo2.png" />
+    </div>
+
+    <div class="register-box-body">
+        <h3 class="login-box-msg">
+            <i class="fa fa-unlock"></i>
+            Restablecer contraseña
+        </h3>
+
+        <form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post">
+
+            <input asp-for="Key" type="hidden" />
+
+            <div class="form-group has-feedback">
+                <label asp-for="Email"></label>
+                <input asp-for="Email" type="email" class="form-control" placeholder="Email" />
+                <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+
+
+            <div class="form-group has-feedback">
+                <label asp-for="Password"></label>
+                <input asp-for="Password" type="password" class="form-control" placeholder="Contraseña" />
+                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <div class="form-group has-feedback">
+                <label asp-for="ConfirmPassword"></label>
+                <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Confirmar contraseña" />
+                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
+
+
+            <div class="row">
+                <div class="col-xs-12 text-right">
+                    <button type="submit" class="btn btn-primary btn-flat">
+                        Cambiar contraseña
+                        <i class="fa fa-check-square-o"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- /.form-box -->
+</div>
+<!-- /.register-box -->

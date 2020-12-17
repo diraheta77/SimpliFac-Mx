@@ -1,0 +1,186 @@
+﻿@{
+    string lalala = ViewData["colorPrimario"].ToString();
+}
+
+    <style type="text/css">
+    .pl-1{
+    padding-left: 1px !important;
+}
+.pr-1 {
+    padding-right: 1px !important;
+}
+.mt-5{
+    margin-top: 5px;
+}
+table.dataTable thead {
+    background: #b9b5b5;
+}
+form.filter {
+    border: 1px solid;
+    padding: 5px;
+    margin-bottom:5px ;
+    /* background: black; */
+    -moz-box-shadow: inset 0 0 10px #847f7f;
+    -webkit-box-shadow: inset 0 0 10px #847f7f;
+    box-shadow: inset 0 0 10px #847f7f;
+}
+
+    form.filter input, form.filter select {
+        border: 1px solid #000;
+    }
+
+.login-logo img{
+    width: 200px;
+}
+.install-box {
+    width: 560px;
+    margin: 7% auto;
+}
+.login-page, .register-page {
+    height: auto;
+    background: #ecf0f5 !important;
+}
+.btn-primary {
+    background-color: @ViewData["colorPrimario"];
+}
+        .skin-blue-light .main-header .navbar{
+            background-color: @ViewData["colorPrimario"]
+        }
+        .skin-blue-light .main-header .logo{
+            background-color: @ViewData["colorPrimario"]
+        }
+        .paginate_button:not(.disabled):hover {
+            background: #fafafa !important;
+            border: 0 !important;
+        }
+footer a {
+    color: #147992 !important;
+}
+.btn-search-block{
+    margin-top: 5px;
+    text-align:right;
+}
+form.filter {
+    display:flex;
+}
+form.filter div{
+    margin-left: 1px;
+}
+form.filter .btn-container {
+    margin-left: auto;
+    height: 35px;
+}
+@@media screen and (max-width: 500px) {
+    form.filter {
+        display: block;
+    }
+    form.filter .btn-container {
+        margin-left: 0;
+        height: auto;
+        margin-top:8px;
+        text-align:right;
+    }
+}
+.mantain-page{
+    height: 100%;
+    background: #ecf0f5 !important;
+}
+.mantain-box {
+    padding-top: 100px;
+}
+.select2-container--default .select2-selection--single, .select2-selection .select2-selection--single {
+    border: 1px solid #2f3033;
+    border-radius: 0;
+    padding: 6px 12px;
+    height: 34px;
+}
+
+        a.navbar-brand {
+            white-space: normal;
+            text-align: center;
+            word-break: break-all;
+        }
+
+        /* Provide sufficient contrast against white background */
+        a {
+            color: #0366d6;
+        }
+
+        .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+            color: #fff;
+            background-color: #1b6ec2;
+            border-color: #1861ac;
+        }
+
+        /* Sticky footer styles
+-------------------------------------------------- */
+html {
+  font-size: 14px;
+}
+@@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.border-top {
+  border-top: 1px solid #e5e5e5;
+}
+.border-bottom {
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.box-shadow {
+  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+button.accept-policy {
+  font-size: 1rem;
+  line-height: inherit;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 0;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  white-space: nowrap;
+  line-height: 60px; /* Vertically center the text there */
+}
+
+/*desde skin-simpli-fact*/
+        .skin-blue-light .main-header .logo:hover {
+            background-color: @ViewData["colorPrimario"]
+        }
+
+        /*desde adminLTE.css*/
+        .btn-primary:hover,
+        .btn-primary:active,
+        .btn-primary.hover {
+            background-color:@ViewData["colorPrimario"]
+        }
+
+
+        .btn-primary.focus, .btn-primary:focus{
+            background-color: @ViewData["colorPrimario"]
+        }
+
+        .btn-primary.active.focus, .btn-primary.active:focus, .btn-primary.active:hover, .btn-primary:active.focus, .btn-primary:active:focus, .btn-primary:active:hover, .open > .dropdown-toggle.btn-primary.focus, .open > .dropdown-toggle.btn-primary:focus, .open > .dropdown-toggle.btn-primary:hover{
+            background-color: @ViewData["colorPrimario"]
+        }
+
+        .skin-blue-light .main-header li.user-header{
+            background-color: @ViewData["colorPrimario"]
+        }
+
+    </style>

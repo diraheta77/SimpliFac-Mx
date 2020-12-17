@@ -1,0 +1,340 @@
+﻿@{
+    ViewData["Title"] = "Dashboards";
+    ViewData["Header"] = "<i class='fa fa-dashboard'></i> Dashboards";
+
+}
+
+<div class="box">
+    <div class="box-body">
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Tarjetas CFDI</h3>
+
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                <i class="fa fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+
+                        <div class="col-md-3 col-sm-6 col-xs-12">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-green"><i class="fa fa-cloud-upload"></i></span>
+
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Facturas Emitidas</span>
+                                    <span class="info-box-number">1,799</span>
+                                </div>
+                                <!-- /.info-box-content -->
+                            </div>
+                            <!-- /.info-box -->
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-md-3 col-sm-6 col-xs-12">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-blue"><i class="fa fa-cloud-download"></i></span>
+
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Facturas Recibidas</span>
+                                    <span class="info-box-number">4,410</span>
+                                </div>
+                                <!-- /.info-box-content -->
+                            </div>
+                            <!-- /.info-box -->
+                        </div>
+                        <!-- /.col -->
+                        <!-- fix for small devices only -->
+                        <div class="clearfix visible-sm-block"></div>
+
+                        <div class="col-md-3 col-sm-6 col-xs-12">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-yellow"><i class="fa fa-check-square-o"></i></span>
+
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Complementos de Pago Recibidos</span>
+                                    <span class="info-box-number">760</span>
+                                </div>
+                                <!-- /.info-box-content -->
+                            </div>
+                            <!-- /.info-box -->
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-md-3 col-sm-6 col-xs-12">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-red"><i class="fa fa-minus-circle"></i></span>
+
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Facturas Recibidas Canceladas</span>
+                                    <span class="info-box-number">65</span>
+                                </div>
+                                <!-- /.info-box-content -->
+                            </div>
+                            <!-- /.info-box -->
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Facturas Recibidas vs Pagos Recibidos</h3>
+
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <p class="text-center">
+                                        <strong>Periodo: 1 Ene, 2020 - 31 Jul, 2020</strong>
+                                    </p>
+
+                                    <div class="chart">
+                                        <!-- Sales Chart Canvas -->
+                                        <canvas id="salesChart" style="height: 180px; width: 816px;" height="225" width="1020"></canvas>
+                                    </div>
+                                    <!-- /.chart-responsive -->
+                                </div>
+                                <!-- /.col -->
+                                <div class="col-md-4">
+                                    <p class="text-center">
+                                        <strong>Total CFDI</strong>
+                                    </p>
+
+                                    <div class="progress-group">
+                                        <span class="progress-text">Facturas Pagadas</span>
+                                        <span class="progress-number"><b>1690</b></span>
+
+                                        <div class="progress sm">
+                                            <div class="progress-bar progress-bar-success" style="width: 100%"></div>
+                                        </div>
+                                    </div>
+                                    <!-- /.progress-group -->
+                                    <div class="progress-group">
+                                        <span class="progress-text">Facturas con Complemento de Pago</span>
+                                        <span class="progress-number"><b>760</b></span>
+
+                                        <div class="progress sm">
+                                            <div class="progress-bar progress-bar-yellow" style="width: 45%"></div>
+                                        </div>
+                                    </div>
+                                    <!-- /.progress-group -->
+                                    <div class="progress-group">
+                                        <span class="progress-text">Facturas sin Complemento de Pago</span>
+                                        <span class="progress-number"><b>930</b></span>
+
+                                        <div class="progress sm">
+                                            <div class="progress-bar progress-bar-red" style="width: 55%"></div>
+                                        </div>
+                                    </div>
+                                    <!-- /.progress-group -->
+                                </div>
+                                <!-- /.col -->
+                            </div>
+                            <!-- /.row -->
+                        </div>
+                        <!-- ./box-body -->
+                        <div class="box-footer">
+                            <div class="row">
+                                <div class="col-sm-3 col-xs-6">
+                                    <div class="description-block border-right">
+                                        <span class="description-percentage text-green"><i class="fa fa-check"></i> 100%</span>
+                                        <h5 class="description-header">$5,450,210.43</h5>
+                                        <span class="description-text">TOTAL PAGADO</span>
+                                    </div>
+                                    <!-- /.description-block -->
+                                </div>
+                                <!-- /.col -->
+                                <div class="col-sm-3 col-xs-6">
+                                    <div class="description-block border-right">
+                                        <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> 45%</span>
+                                        <h5 class="description-header">$2,452,594.69</h5>
+                                        <span class="description-text">TOTAL COMPROBANTES DE <br /> PAGO RECIBIDOS</span>
+                                    </div>
+                                    <!-- /.description-block -->
+                                </div>
+                                <!-- /.col -->
+                                <div class="col-sm-3 col-xs-6">
+                                    <div class="description-block">
+                                        <span class="description-percentage text-red"><i class="fa fa-caret-down"></i> 55%</span>
+                                        <h5 class="description-header">$2,997,615.74</h5>
+                                        <span class="description-text">TOTAL COMPROBANTES DE <br /> PAGO PENDIENTES</span>
+                                    </div>
+                                    <!-- /.description-block -->
+                                </div>
+                            </div>
+                            <!-- /.row -->
+                        </div>
+                        <!-- /.box-footer -->
+                    </div>
+                    <!-- /.box -->
+                </div>
+                <!-- /.col -->
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="box box-default">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Solicitudes de Descarga SAT</h3>
+
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="chart-responsive">
+                                        <canvas id="pieChart" height="165" width="328" style="width: 328px; height: 165px;"></canvas>
+                                    </div>
+                                    <!-- ./chart-responsive -->
+                                </div>
+                                <!-- /.col -->
+                                <div class="col-md-4">
+                                    <ul class="chart-legend clearfix">
+                                        <li><i class="fa fa-circle-o text-green"></i> Finalizadas</li>
+                                        <li><i class="fa fa-circle-o text-yellow"></i> En Proceso</li>
+                                        <li><i class="fa fa-circle-o text-aqua"></i> Registradas</li>
+                                        <li><i class="fa fa-circle-o text-light-blue"></i> En Espera</li>
+                                        <li><i class="fa fa-circle-o text-gray"></i> Canceladas</li>
+                                        <li><i class="fa fa-circle-o text-red"></i> Rechazadas</li>
+                                    </ul>
+                                </div>
+                                <!-- /.col -->
+                            </div>
+                            <!-- /.row -->
+                        </div>
+                        <!-- /.footer -->
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Estatus Listas Negras (5 más recientes)</h3>
+
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <div class="table-responsive">
+                                <table class="table no-margin">
+                                    <thead>
+                                        <tr>
+                                            <th>RFC Emisor</th>
+                                            <th>UUID CFDI</th>
+                                            <th>Etatus</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>NWM9709244W4</td>
+                                            <td>
+                                                6B2F89CC-B028-4A21-AC58-7C6BD0D1154A
+                                            </td>
+                                            <td><span class="label label-success">Cumplido</span></td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>SSE951221AX0</td>
+                                            <td>
+                                                CAF4D32D-38E9-4920-99C3-8DC252263DC8
+                                            </td>
+                                            <td><span class="label label-success">Cumplido</span></td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>UVM870210LT1</td>
+                                            <td>
+                                                DBF3C7AA-B926-4952-B5EB-5FD29A24C17E
+                                            </td>
+                                            <td><span class="label label-success">Cumplido</span></td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>CAFJ5907146N5</td>
+                                            <td>
+                                                2A704CC3-433E-4640-821C-C50F4EDD7F18
+                                            </td>
+                                            <td><span class="label label-danger">Inumplido</span></td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>AXT940727FP8</td>
+                                            <td>
+                                                5A616170-63D5-423D-B9E7-E2263C58D464
+                                            </td>
+                                            <td><span class="label label-success">Cumplido</span></td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.table-responsive -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- /.box-body -->
+            <div class="box-footer">
+
+            </div>
+            <!-- /.box-footer-->
+        </div>
+<!-- /.box -->
+
+
+@section Styles{
+    <link rel="stylesheet" href="~/theme/bower_components/datatables/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="~/theme/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" href="~/lib/datatable-responsive/css/responsive.dataTables.min.css">
+
+    <link rel="stylesheet" href="https://adminlte.io/themes/AdminLTE/bower_components/jvectormap/jquery-jvectormap.css">
+}
+
+@section Scripts{
+
+    <script src="~/theme/bower_components/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="~/theme/bower_components/datatables-bs/js/dataTables.bootstrap.min.js"></script>
+
+    <script src="~/theme/bower_components/moment/min/moment.min.js"></script>
+    <script src="~/theme/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="~/theme/bower_components/bootstrap-datepicker/dist/locales/bootstrap-datepicker.es.min.js"></script>
+    <script src="~/lib/datatable-responsive/js/dataTables.responsive.min.js"></script>
+
+    <script src="https://adminlte.io/themes/AdminLTE/bower_components/chart.js/Chart.js"></script>
+    <script src="https://adminlte.io/themes/AdminLTE/dist/js/pages/dashboard2.js"></script>
+    <script src="https://adminlte.io/themes/AdminLTE/dist/js/demo.js"></script>
+
+}
+
+
+
+

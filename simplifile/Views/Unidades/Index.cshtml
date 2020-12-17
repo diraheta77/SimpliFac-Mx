@@ -1,0 +1,251 @@
+﻿@{
+    ViewData["Title"] = "Unidades de negocio";
+    ViewData["Header"] = "<i class='fa fa-th'></i> Unidades de negocio";
+
+}
+
+@Html.Modal("insert-unidad", ".btn-insert-unidad", "Crear nueva unidad de negocio", "fa fa-plus-square", "Guardar datos", "md", false)
+@Html.Modal("edit-unidad", ".btn-update-unidad", "Modificar unidad de negocio", "fa fa-edit", "Guardar datos", "md", false)
+@Html.Modal("delete-unidad", ".btn-delete-unidad", "Eliminar unidad de negocio", "fa fa-trash", "Continuar", "sm")
+<!-- Default box -->
+<div class="box">
+    <div class="box-header with-border">
+        <div class="box-tools pull-right">
+            @if (User.HasRoles("admin", "manager"))
+            {
+                <button id="" type="button" data-url="@Url.Action("Insert")" class='btn btn-primary btn-insert-unidad' data-toggle="tooltip" data-placement="left" title="Insertar">
+                    <i class="fa fa-plus-square"></i>
+                    Crear nueva unidad de negocio
+                </button>
+            }
+        </div>
+
+    </div>
+    <div class="box-body">
+        <form id="frm-search" class="filter" action="#">
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Id Unidad" id="filter_un_id">
+            </div>
+            <div class="form-group">
+                @Html.DropDownList("filter_emp_id", ViewBag.Empresas, "Filtrar por empresa", new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Razon social" id="filter_razon_social">
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Rfc" id="filter_rfc">
+            </div>
+            <div class="btn-container">
+                <button type="submit" class="btn btn-default ">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+        </form>
+        <table id="companies" class="display" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Id Unidad</th>
+                    <th>Empresa</th>
+                    <th>Razon social</th>
+                    <th>Rfc</th>
+                    <th class="text-center">Estatus</th>
+                    <th class="all"></th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <!-- /.box-body -->
+    <div class="box-footer">
+
+    </div>
+    <!-- /.box-footer-->
+</div>
+<!-- /.box -->
+
+@section Styles{
+    <link rel="stylesheet" href="~/theme/bower_components/datatables/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="~/lib/datatable-responsive/css/responsive.dataTables.min.css">
+}
+
+@section Scripts{
+
+    <script src="~/theme/bower_components/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="~/theme/bower_components/datatables-bs/js/dataTables.bootstrap.min.js"></script>
+    <script src="~/lib/datatable-responsive/js/dataTables.responsive.min.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            var table = $('#companies').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "ordering": false,
+                "searching": false,
+                "lengthChange": true,
+                "pagingType": "simple",
+                "responsive": true,
+                "language": {
+                    "url": "@Url.Content("~/langs/data-table-es.json")"
+                },
+                "ajax":
+                {
+                    "url": "@Url.Content("~/")api/unidades",
+                    "data": function (d) {
+                        var page = 1;
+                        var length = d.length;
+                        if (d.start % d.length == 0) {
+                            page = (d.start / d.length) + 1;
+                        } else {
+                            page = (d.start / d.length);
+                        }
+                        d = {};
+                        d.page = page;
+                        d.length = length;
+                        d.funid = $('#filter_un_id').val();
+                        d.fempid = $('#filter_emp_id').val();
+                        d.frazonsocial = $('#filter_razon_social').val();
+                        d.frfc = $('#filter_rfc').val();
+                        return d;
+                    }
+                },
+                "columns": [
+                    { "data": "unId" },
+                    { "data": "empresa" },
+                    { "data": "unRazonSocial" },
+                    { "data": "unRFC" },
+                    { "data": "unEstatus" },
+                    { "data": "" },
+                ],
+                "columnDefs": [
+                    {
+                        // The `data` parameter refers to the data for the cell (defined by the
+                        // `data` option, which defaults to the column being worked with, in
+                        // this case `data: 0`.
+                        "render": function (data, type, row) {
+                            return '<b>' + data + '</b>';
+                        },
+                        "targets": 0
+                    },
+                    {
+                        // The `data` parameter refers to the data for the cell (defined by the
+                        // `data` option, which defaults to the column being worked with, in
+                        // this case `data: 0`.
+                        "render": function (data, type, row) {
+                            return '<b>' + data.empRazonSocial + '</b>';
+                        },
+                        "targets": 1
+                    },
+                    {
+                        "render": function (data, type, row) {
+                            if (data == 1) {
+                                return `Activo`;
+                            } else if(data == 2) {
+                                return `Pendiente carga cer`;
+                            } else  {
+                                return `Inactivo`;
+                            }
+
+                        },
+                        "targets": 4
+                    },
+                    {
+                        "render": function (data, type, row) {
+
+                            return `
+                                <div class="text-right">
+                                    <button id="" type='button' data-url='@Url.Content("~/")unidades/update?emp_id=${row.empId}&id=${row.unId}' class='btn btn-default btn-sm btn-update-unidad' data-toggle="tooltip" data-placement="left" title="Modificar"><i class="fa fa-edit"></i></button>
+
+                                    @if (User.HasRoles("admin", "manager"))
+                                    {
+                                        <button id="" type='button' data-url='@Url.Content("~/")unidades/delete?emp_id=${row.empId}&id=${row.unId}' class='btn btn-default btn-sm btn-delete-unidad' data-toggle="tooltip" data-placement="left" title="Eliminar"><i class="fa fa-trash-o"></i></button>
+                                    }
+                                </div>
+                            `;
+                        },
+                        "targets": 5
+                    }
+                ]
+            });
+
+            $('#frm-search').submit(function (e) {
+                e.preventDefault();
+                table.draw();
+            });
+
+            $(document).on('change', '#carga-fiel', function () {
+                if ($('#carga-fiel:checked').length) {
+                    $('#field-data').show();
+                } else {
+                    $('#field-data').hide();
+                }
+            });
+
+            $('#edit-unidad,#insert-unidad').on('click', '[data-save="modal"]', function (event) {
+                event.preventDefault();
+
+                var form = $(this).parents('.modal').find('form');
+                var actionUrl = form.attr('action');
+                var dataToSend = new FormData();
+                dataToSend.append('UnId', $('#UnId').val());
+
+                if ($('#EmpId option').length > 0) {
+                    dataToSend.append('EmpId', $('#EmpId option:selected').attr('value'));
+                } else {
+                    dataToSend.append('EmpId', $('#EmpId').val());
+                }
+
+                dataToSend.append('UnRazonSocial', $('#UnRazonSocial').val());
+                dataToSend.append('UnRFC', $('#UnRFC').val());
+                dataToSend.append('CargaFiel', $('#carga-fiel:checked').length != 0);
+                var cerFieldData = $('#CerFiel')[0].files[0];
+                dataToSend.append('CerFiel', cerFieldData);
+                dataToSend.append('KeyFiel', $('#KeyFiel')[0].files[0]);
+                dataToSend.append('PaswordFiel', $('#PaswordFiel').val());
+
+
+                // Attach file
+                $.ajax({
+                    url: actionUrl,
+                    data: dataToSend,
+                    type: 'POST',
+                    contentType: false, // NEEDED, DON'T OMIT THIS (requires jQuery 1.6+)
+                    processData: false, // NEEDED, DON'T OMIT THIS
+                    success: function (data) {
+                        if (data.redirect == true) {
+                            window.location = data.url;
+                            return;
+                        }
+                        //var newBody = $('.modal-body', data);
+                        $('#edit-unidad').find('.modal-body').html(data);
+                        $('#CerFiel')[0].files[0] = cerFieldData;
+                    },
+                    error: function (err) {
+
+                        if (err.status == 400) {
+                            var errors = err.responseJSON;
+                            form.find('.field-validation-valid').html('');
+                            for (const prop in errors) {
+                                $(`#${prop}`).closest('div').find('.field-validation-valid').html(errors[prop]);
+                                console.log(`obj.${prop} = ${errors[prop]}`);
+                            }
+                        }
+                    }
+                });
+
+                /*$.post(actionUrl, dataToSend).done(function (data) {
+
+                    if (data.redirect == true) {
+                        window.location = data.url;
+                        return;
+                    }
+                    //var newBody = $('.modal-body', data);
+                    $('#edit-unidad').find('.modal-body').html(data);
+
+                });*/
+            });
+
+        });
+
+    </script>
+}
+
+

@@ -1,0 +1,348 @@
+﻿
+@model simplifile.ViewModels.Instalar.InstalarViewModel
+@{
+    Html.AddCssBody("login-page");
+    ViewData["Title"] = "Instalar";
+    Layout = "~/Views/Shared/_Auth.cshtml";
+}
+
+<div class="install-box">
+    <div class="login-logo">
+        <img src="~/images/Logo_simplifac_original.png" />
+    </div>
+    <!-- /.login-logo -->
+    <div class="login-box-body">
+        <h3 class="login-box-msg">
+            <i class="fa  fa-server"></i>
+            Instalar
+        </h3>
+
+        <form method="post">
+
+            <div class="form-group has-feedback">
+                <label asp-for="EmailAdmin"></label>
+                <input asp-for="EmailAdmin" type="email" class="form-control" placeholder="Correo del administrador" />
+                <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                <span asp-validation-for="EmailAdmin" class="text-danger"></span>
+            </div>
+
+            <div class="form-group has-feedback">
+                <label asp-for="EmailPassword"></label>
+                <input asp-for="EmailPassword" type="password" class="form-control" placeholder="Contraseña de administrador" />
+                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                <span asp-validation-for="EmailPassword" class="text-danger"></span>
+            </div>
+
+            <div class="form-group has-feedback">
+                <label asp-for="EmailPasswordConfirmation"></label>
+                <input asp-for="EmailPasswordConfirmation" type="password" class="form-control" placeholder="Confirmar contraseña" />
+                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                <span asp-validation-for="EmailPasswordConfirmation" class="text-danger"></span>
+            </div>
+
+            <h3>
+                <i class="fa fa-cogs"></i>
+                Parámetros generales
+            </h3>
+            <div class="form-group has-feedback">
+                <label asp-for="gen01"></label>
+                <select class="form-control" asp-for="gen01">
+                    <option value="true">Si</option>
+                    <option value="false">No</option>
+                </select>
+                <span asp-validation-for="gen01" class="text-danger"></span>
+            </div>
+
+            <div class="form-group has-feedback">
+                <label asp-for="gen02"></label>
+                <input asp-for="gen02" type="text" class="form-control" placeholder="" />
+                <span class="fa fa-cog form-control-feedback"></span>
+                <span asp-validation-for="gen02" class="text-danger"></span>
+            </div>
+
+            <div class="form-group has-feedback">
+                <label asp-for="gen03"></label>
+                <input asp-for="gen03" type="text" class="form-control" placeholder="" />
+                <span class="fa fa-cog form-control-feedback"></span>
+                <span asp-validation-for="gen03" class="text-danger"></span>
+            </div>
+
+
+            <div class="form-group has-feedback">
+                <label asp-for="gen08"></label>
+                <input asp-for="gen08" type="text" class="form-control" placeholder="" />
+                <span class="fa fa-cog form-control-feedback"></span>
+                <span asp-validation-for="gen08" class="text-danger"></span>
+            </div>
+            <div class="form-group has-feedback">
+                <label asp-for="gen09"></label>
+                <select class="form-control" asp-for="gen09">
+                    <option value="true">Si</option>
+                    <option value="false">No</option>
+                </select>
+                <span asp-validation-for="gen09" class="text-danger"></span>
+            </div>
+            <div class="form-group has-feedback">
+                <label asp-for="gen10"></label>
+                <input asp-for="gen10" type="text" class="form-control" placeholder="" />
+                <span class="fa fa-cog form-control-feedback"></span>
+                <span asp-validation-for="gen10" class="text-danger"></span>
+            </div>
+
+            <div class="form-group has-feedback">
+                <label asp-for="gen04"></label>
+                <input asp-for="gen04" type="text" class="form-control" placeholder="" />
+                <span class="fa fa-cog form-control-feedback"></span>
+                <span asp-validation-for="gen04" class="text-danger"></span>
+            </div>
+
+            <div class="form-group has-feedback">
+                <label asp-for="gen05"></label>
+                <input asp-for="gen05" type="text" class="form-control" placeholder="" />
+                <span class="fa fa-cog form-control-feedback"></span>
+                <span asp-validation-for="gen05" class="text-danger"></span>
+            </div>
+
+            <div class="form-group has-feedback">
+                <label asp-for="gen06"></label>
+                <input asp-for="gen06" type="text" class="form-control" placeholder="" />
+                <span class="fa fa-cog form-control-feedback"></span>
+                <span asp-validation-for="gen06" class="text-danger"></span>
+            </div>
+
+            <div class="form-group has-feedback">
+                <label asp-for="gen07"></label>
+                <input asp-for="gen07" type="number" class="form-control" placeholder="" />
+                <span class="fa fa-cog form-control-feedback"></span>
+                <span asp-validation-for="gen07" class="text-danger"></span>
+            </div>
+
+            <div class="form-group has-feedback">
+                <label asp-for="gen11"></label>
+                <select class="form-control" asp-for="gen11">
+                    <option value="true">Si</option>
+                    <option value="false">No</option>
+                </select>
+                <span asp-validation-for="gen11" class="text-danger"></span>
+            </div>
+
+            <div class="form-group has-feedback">
+                <label asp-for="gen12"></label>
+                <input asp-for="gen12" type="text" class="form-control" placeholder="" />
+                <span class="fa fa-cog form-control-feedback"></span>
+                <span asp-validation-for="gen12" class="text-danger"></span>
+            </div>
+
+            <div class="form-group has-feedback">
+                <label asp-for="gen13"></label>
+                <input asp-for="gen13" type="text" class="form-control" placeholder="" />
+                <span class="fa fa-cog form-control-feedback"></span>
+                <span asp-validation-for="gen13" class="text-danger"></span>
+            </div>
+
+            <div class="form-group has-feedback">
+                <label asp-for="gen14"></label>
+                <input asp-for="gen14" type="text" class="form-control" placeholder="" />
+                <span class="fa fa-cog form-control-feedback"></span>
+                <span asp-validation-for="gen14" class="text-danger"></span>
+            </div>
+
+            <div class="form-group has-feedback">
+                <label asp-for="gen15"></label>
+                <input asp-for="gen15" type="text" class="form-control" placeholder="" />
+                <span class="fa fa-cog form-control-feedback"></span>
+                <span asp-validation-for="gen15" class="text-danger"></span>
+            </div>
+
+            <div class="form-group has-feedback">
+                <label asp-for="gen16"></label>
+                <input asp-for="gen16" type="text" class="form-control" placeholder="" />
+                <span class="fa fa-cog form-control-feedback"></span>
+                <span asp-validation-for="gen16" class="text-danger"></span>
+            </div>
+
+            <div class="form-group has-feedback">
+                <label asp-for="gen17"></label>
+                <input asp-for="gen17" type="text" class="form-control" placeholder="" />
+                <span class="fa fa-cog form-control-feedback"></span>
+                <span asp-validation-for="gen17" class="text-danger"></span>
+            </div>
+            <div class="form-group has-feedback">
+                <label asp-for="gen18"></label>
+                <select class="form-control" asp-for="gen18">
+                    <option value="true">Si</option>
+                    <option value="false">No</option>
+                </select>
+                <span asp-validation-for="gen18" class="text-danger"></span>
+            </div>
+            <div class="form-group has-feedback">
+                <label asp-for="gen19"></label>
+                <select class="form-control" asp-for="gen19">
+                    <option value="true">Si</option>
+                    <option value="false">No</option>
+                </select>
+                <span asp-validation-for="gen19" class="text-danger"></span>
+            </div>
+            <h3>
+                <i class="fa fa-cogs"></i>
+                Parámetros de empresa
+            </h3>
+            <div class="form-group has-feedback">
+                <label asp-for="emp01"></label>
+                <select class="form-control" asp-for="emp01">
+                    <option value="true">Si</option>
+                    <option value="false">No</option>
+                </select>
+                <span asp-validation-for="emp01" class="text-danger"></span>
+            </div>
+            <div class="form-group has-feedback">
+                <label asp-for="emp02"></label>
+                <input asp-for="emp02" type="number" class="form-control" placeholder="" />
+                <span class="fa fa-cog form-control-feedback"></span>
+                <span asp-validation-for="emp02" class="text-danger"></span>
+            </div>
+            <div class="form-group has-feedback">
+                <label asp-for="emp03"></label>
+                <input asp-for="emp03" type="number" class="form-control" placeholder="" />
+                <span class="fa fa-cog form-control-feedback"></span>
+                <span asp-validation-for="emp03" class="text-danger"></span>
+            </div>
+            <div class="form-group has-feedback">
+                <label asp-for="emp04"></label>
+                <input asp-for="emp04" type="text" class="form-control" placeholder="" />
+                <span class="fa fa-cog form-control-feedback"></span>
+                <span asp-validation-for="emp04" class="text-danger"></span>
+            </div>
+            <div class="form-group has-feedback">
+                <label asp-for="emp05"></label>
+                <input asp-for="emp05" type="text" class="form-control" placeholder="" />
+                <span class="fa fa-cog form-control-feedback"></span>
+                <span asp-validation-for="emp05" class="text-danger"></span>
+            </div>
+            <div class="form-group has-feedback">
+                <label asp-for="emp06"></label>
+                <input asp-for="emp06" type="text" class="form-control" placeholder="" />
+                <span class="fa fa-cog form-control-feedback"></span>
+                <span asp-validation-for="emp06" class="text-danger"></span>
+            </div>
+
+            <div class="form-group has-feedback">
+                <label asp-for="emp07"></label>
+                <select class="form-control" asp-for="emp07">
+                    <option value="true">Si</option>
+                    <option value="false" selected>No</option>
+                </select>
+                <span asp-validation-for="emp07" class="text-danger"></span>
+            </div>
+
+            <div class="form-group has-feedback">
+                <label asp-for="emp08"></label>
+                <select class="form-control" asp-for="emp08">
+                    <option value="TODOS">TODOS</option>
+                    <option value="RECEPTOR">RECEPTOR</option>
+                    <option value="EMISOR">EMISOR</option>
+                    <option value="NINGUNO" selected>NINGUNO</option>
+                </select>
+                <span asp-validation-for="emp08" class="text-danger"></span>
+            </div>
+
+            <div class="form-group has-feedback">
+                <label asp-for="emp09"></label>
+                <select class="form-control" asp-for="emp09">
+                    <option value="TODOS">TODOS</option>
+                    <option value="RECEPTOR">RECEPTOR</option>
+                    <option value="EMISOR">EMISOR</option>
+                    <option value="NINGUNO" selected>NINGUNO</option>
+                </select>
+                <span asp-validation-for="emp09" class="text-danger"></span>
+            </div>
+
+            <div class="form-group has-feedback">
+                <label asp-for="emp10"></label>
+                <select class="form-control" asp-for="emp10">
+                    <option value="TODOS">TODOS</option>
+                    <option value="RECEPTOR">RECEPTOR</option>
+                    <option value="EMISOR">EMISOR</option>
+                    <option value="NINGUNO" selected>NINGUNO</option>
+                </select>
+                <span asp-validation-for="emp10" class="text-danger"></span>
+            </div>
+
+            <div class="form-group has-feedback">
+                <label asp-for="emp11"></label>
+                <select class="form-control" asp-for="emp11">
+                    <option value="TODOS">TODOS</option>
+                    <option value="RECEPTOR">RECEPTOR</option>
+                    <option value="EMISOR">EMISOR</option>
+                    <option value="NINGUNO" selected>NINGUNO</option>
+                </select>
+                <span asp-validation-for="emp11" class="text-danger"></span>
+            </div>
+
+            <div class="form-group has-feedback">
+                <label asp-for="emp12"></label>
+                <input asp-for="emp12" type="text" class="form-control" placeholder="" />
+                <span class="fa fa-cog form-control-feedback"></span>
+                <span asp-validation-for="emp12" class="text-danger"></span>
+            </div>
+
+            <div class="form-group has-feedback">
+                <label asp-for="emp13"></label>
+                <input asp-for="emp13" type="text" class="form-control" placeholder="" />
+                <span class="fa fa-cog form-control-feedback"></span>
+                <span asp-validation-for="emp13" class="text-danger"></span>
+            </div>
+
+            <div class="form-group has-feedback">
+                <label asp-for="emp14"></label>
+                <input asp-for="emp14" type="text" class="form-control" placeholder="" />
+                <span class="fa fa-cog form-control-feedback"></span>
+                <span asp-validation-for="emp14" class="text-danger"></span>
+            </div>
+
+            <div class="form-group has-feedback">
+                <label asp-for="emp15"></label>
+                <input asp-for="emp15" type="text" class="form-control" placeholder="" />
+                <span class="fa fa-cog form-control-feedback"></span>
+                <span asp-validation-for="emp15" class="text-danger"></span>
+            </div>
+
+            <div class="form-group has-feedback">
+                <label asp-for="emp16"></label>
+                <input asp-for="emp16" type="text" class="form-control" placeholder="" />
+                <span class="fa fa-cog form-control-feedback"></span>
+                <span asp-validation-for="emp16" class="text-danger"></span>
+            </div>
+
+            <div class="form-group has-feedback">
+                <label asp-for="emp17"></label>
+                <input asp-for="emp17" type="text" class="form-control" placeholder="" />
+                <span class="fa fa-cog form-control-feedback"></span>
+                <span asp-validation-for="emp17" class="text-danger"></span>
+            </div>
+
+            <div class="form-group has-feedback">
+                <label asp-for="emp18"></label>
+                <input asp-for="emp18" type="text" class="form-control" placeholder="" />
+                <span class="fa fa-cog form-control-feedback"></span>
+                <span asp-validation-for="emp18" class="text-danger"></span>
+            </div>
+
+            <div class="row ">
+                <div class="col-xs-12 text-right">
+                    <button type="submit" class="btn btn-primary btn-flat">
+                        Instalar
+                        <i class="fa fa-check-square-o"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+
+
+
+    </div>
+    <!-- /.login-box-body -->
+</div>
+
+
+

@@ -1,0 +1,73 @@
+﻿@model simplifile.ViewModels.Parm.ParmModificarViewModel
+<!-- Modal -->
+<div class="modal-body">
+    <form asp-action="Update">
+
+        <div class="form-group">
+            <label asp-for="ParmId"></label>
+            <input asp-for="ParmId" class="form-control" readonly />
+            <span asp-validation-for="ParmId" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="ParmEmpId"></label>
+            <input type="hidden" asp-for="ParmEmpId" />
+            <input asp-for="ParmEmpNombre" class="form-control" readonly />
+            <span asp-validation-for="ParmEmpId" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="ParmUniId"></label>
+            <input type="hidden" asp-for="ParmUniId" />
+            <input asp-for="ParmUniNombre" class="form-control" readonly />
+            <span asp-validation-for="ParmUniId" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="ParmDesc"></label>
+            <input asp-for="ParmDesc" class="form-control" />
+            <span asp-validation-for="ParmDesc" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Tipo"></label>
+            <div>
+                <div class="radio-inline ">
+                    <label>
+                        <input type="radio" asp-for="Tipo" value="0" />
+                        Carácteres
+                    </label>
+                </div>
+                <div class="radio-inline ">
+                    <label>
+                        <input type="radio" asp-for="Tipo" value="1" />
+                        Númerico
+                    </label>
+                </div>
+                <div class="radio-inline">
+                    <label>
+                        <input type="radio" asp-for="Tipo" value="2" />
+                        Buleano
+                    </label>
+                </div>
+
+            </div>
+
+            <span asp-validation-for="ParmDesc" class="text-danger"></span>
+        </div>
+        <div class="form-group" style="display: @(Model.Tipo == 0 ? "block":"none")">
+            <label asp-for="ParmValTxt"></label>
+            <input asp-for="ParmValTxt" class="form-control" />
+            <span asp-validation-for="ParmValTxt" class="text-danger"></span>
+        </div>
+        <div class="form-group" style="display: @(Model.Tipo == 1 ? "block":"none")">
+            <label asp-for="ParmValNum"></label>
+            <input asp-for="ParmValNum" class="form-control" />
+            <span asp-validation-for="ParmValNum" class="text-danger"></span>
+        </div>
+        <div class="form-group" style="display: @(Model.Tipo == 2 ? "block":"none")">
+            <label asp-for="ParmBool"></label>
+            <select class="form-control" asp-for="ParmBool">
+                <option value="true">Verdadero</option>
+                <option value="false">Falso</option>
+            </select>
+            <span asp-validation-for="ParmBool" class="text-danger"></span>
+        </div>
+    </form>
+</div>

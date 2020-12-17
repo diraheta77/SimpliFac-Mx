@@ -1,0 +1,11 @@
+﻿
+@model simplifile.ViewModels.Parm.ParmEliminarViewModel
+<!-- Modal -->
+<div class="modal-body">
+    <form asp-action="Delete">
+        <h3>¿Esta seguro que desea eliminar el parámetro @Model.ParmId?</h3>
+        <input asp-for="ParmId" type="hidden" class="form-control" />
+        <input asp-for="ParmEmpId" type="hidden" class="form-control" />
+        
+    </form>
+</div>
